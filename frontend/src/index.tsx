@@ -2,8 +2,11 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 // import { store } from './app/store';
-import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
+import PageRoutes from "./router/PageRoutes";
 import reportWebVitals from "./reportWebVitals";
+import CssBaseline from "@mui/material/CssBaseline";
+import PDFReader from "./views/pdfReader";
 import "./index.css";
 
 const container = document.getElementById("root")!;
@@ -11,10 +14,14 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <App />
-    {/* <Provider store={store}>
+    <Router>
+      <CssBaseline />
+      {/* <PageRoutes /> */}
+      <PDFReader />
+      {/* <Provider store={store}>
       <App />
     </Provider> */}
+    </Router>
   </React.StrictMode>
 );
 

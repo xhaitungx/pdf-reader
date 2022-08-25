@@ -1,0 +1,12 @@
+#pd-header,
+#pd-sidebar {
+  background-color: var(--brown-darker);
+}
+
+#pd-main {
+  background-color: var(--brown-light) !important;
+}
+
+.Mui-selected {
+  background-color: var(--brown-light) !important;
+}
