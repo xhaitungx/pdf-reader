@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { IBook } from "../../types/book";
 import "./style.css";
+import { Button } from "@mui/material";
 
 const ImportFromLocal = () => {
   function ABtoBuffer(ab) {
@@ -60,12 +61,20 @@ const ImportFromLocal = () => {
         multiple
         onChange={onImportBook}
       />
-      <button
-        className="btn import-btn"
+      <Button
+        variant="contained"
         onClick={(e) => document.getElementById("input-import-book")!.click()}
+        sx={{
+          background: "#ebecf0",
+          color: "black",
+          "&:hover": {
+            background: "#b5b6b9",
+            color: "black",
+          },
+        }}
       >
-        Import
-      </button>
+        Thêm sách
+      </Button>
     </div>
   );
 };

@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "@vitalets/google-translate-api": "^8.0.0",
@@ -14,7 +14,8 @@
     "express": "^4.18.1",
     "google-translate-api": "^2.3.0",
     "mongoose": "^6.5.2",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "tratu-core": "^2.2.0"
   },
   "author": "Luu Hai Tung",
   "license": "ISC",

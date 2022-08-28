@@ -1,3 +1,9 @@
 const router = require("express").Router();
-router.use("/api", require("./api"));
-module.exports = router;
+
+function route(app) {
+  app.use("/book", require("./book"));
+  app.use("/translate", require("./translate"));
+}
+// router.use("/book", require("./book"));
+
+module.exports = route;

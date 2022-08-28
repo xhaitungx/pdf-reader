@@ -12,11 +12,17 @@ class Header extends React.Component<HeaderProps, HeaderStates> {
           position="fixed"
           sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         >
-          <Toolbar>
+          <Toolbar
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "0 1rem",
+            }}
+          >
             <Typography variant="h6" noWrap component="div">
-              Clipped drawer
+              PDF Reader
             </Typography>
-            <ImportFromLocal />;
+            <ImportFromLocal />
           </Toolbar>
         </AppBar>
       </>

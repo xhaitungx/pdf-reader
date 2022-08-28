@@ -1,8 +1,8 @@
 :root {
-  --brown-darkest: #7b6855;
-  --brown-darker: #958270;
-  --brown-light: #ccc1b5;
-  --nier-color: #dcd8c0;
+  --blue-darkest: #215262;
+  --blue-darker: #739ba7;
+  --blue-light: #7bb4c5;
+  --grey-color: #ebecf0;
 }
 
 body {

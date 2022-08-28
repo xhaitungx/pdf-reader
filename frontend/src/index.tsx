@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-// import { store } from './app/store';
+import store from "./store";
 import { BrowserRouter as Router } from "react-router-dom";
 import PageRoutes from "./router/PageRoutes";
 import reportWebVitals from "./reportWebVitals";
@@ -16,11 +16,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <CssBaseline />
-      {/* <PageRoutes /> */}
-      <PDFReader />
-      {/* <Provider store={store}>
-      <App />
-    </Provider> */}
+      <Provider store={store}>
+        <PageRoutes />
+      </Provider>
     </Router>
   </React.StrictMode>
 );
