@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
-const BookSchema = mongoose.Schema(
+const bookSchema = mongoose.Schema(
   {
-    bookID: { type: Schema.Types.ObjectId, ref: "BookCommon" },
+    softDelete: { type: Boolean, default: false },
     name: String,
+    cover: Buffer,
+    md5: String,
     content: Buffer,
     cfi: Object,
   },
   { timestamps: true }
 );
 
-const Book = mongoose.model("Book", BookSchema);
+const Book = mongoose.model("Book", bookSchema);
 
 module.exports = Book;

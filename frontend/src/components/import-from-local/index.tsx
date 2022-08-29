@@ -1,39 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { IBook } from "../../types/book";
 import "./style.css";
 import { Button } from "@mui/material";
-
+import { fetchMD5 } from "../../utils/fileUtils/md5Util";
+import { ABtoBuffer, ABtoBase64 } from "../../utils/fileUtils/typeUtils";
 const ImportFromLocal = () => {
-  function ABtoBuffer(ab) {
-    const buf = Buffer.alloc(ab.byteLength);
-    const view = new Uint8Array(ab);
-    for (let i = 0; i < buf.length; ++i) {
-      buf[i] = view[i];
-    }
-    return buf;
-  }
-
+  const [img, setImg] = useState(
+    "data:image/png;base64," +
+      "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+  );
   async function getFileContent(file: any) {
+    try {
+      fetchMD5(file);
+    } catch (err) {
+      console.log(err);
+    }
     // Common information
     let bookName = file.name.split(".")[0];
     let reader = new FileReader();
     reader.readAsArrayBuffer(file);
     // Book content
     reader.onload = async (e) => {
-      let fileContent = ABtoBuffer((e.target as any).result);
+      const fileArrayBuffer = (e.target as any).result;
+      let bookContent = ABtoBuffer(fileArrayBuffer);
+      let bookCover =
+        "data:image/png/jpeg;base64," + ABtoBase64(fileArrayBuffer);
+      setImg(bookCover);
       let book = {
         name: bookName,
-        content: fileContent,
+        content: bookContent,
       };
 
       // await axios
       //   .post("http://localhost:5004/api/book", book)
       //   .then(({ data }) => console.log(data))
       //   .catch(({ error }) => console.log(error));
-      await axios
-        .get("http://localhost:5004/api/book")
-        .then(({ data }) => console.log(data));
+      // await axios
+      //   .get("http://localhost:5004/api/book")
+      //   .then(({ data }) => console.log(data));
     };
   }
 
@@ -54,6 +59,7 @@ const ImportFromLocal = () => {
 
   return (
     <div>
+      {img !== "" && <img src={img} alt="ssd" />}
       <input
         type="file"
         id="input-import-book"

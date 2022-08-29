@@ -1,7 +1,8 @@
-const BookCommon = require("../models/BookCommonModel");
-
+const Book = require("../models/BookModel");
+let { connect } = require("../config/db");
 module.exports = {
   show: function (req, res) {
+    connect();
     res.status(200).json({
       message: "getBook",
     });
@@ -14,6 +15,10 @@ module.exports = {
   },
 
   create: function (req, res) {
+    console.log("create");
+  },
+
+  update: function (req, res) {
     console.log("create");
   },
 };
