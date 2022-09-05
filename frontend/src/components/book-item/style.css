@@ -1,0 +1,10 @@
+.book-item {
+  width: 120px;
+  height: 260px;
+}
+
+.book-item p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

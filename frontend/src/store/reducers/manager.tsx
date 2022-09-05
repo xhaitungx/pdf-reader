@@ -3,7 +3,6 @@ const initState = {
   deletedBooks: [],
   notes: [],
   vocabularies: [],
-  isLoading: Boolean,
   message: "Add Successfully",
 };
 export function manager(

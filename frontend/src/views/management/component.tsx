@@ -24,7 +24,13 @@ class Management extends React.Component<ManagementProps, ManagementStates> {
           <Box
             id="pd-main"
             component="main"
-            sx={{ flexGrow: 1, p: 3, height: "100vh" }}
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              height: "100vh",
+              overflowY: "hidden",
+              paddingRight: 0,
+            }}
           >
             <this.DrawerHeader />
             <ComponentRoutes />

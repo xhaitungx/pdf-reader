@@ -1,3 +1,7 @@
-export interface NoteListProps {}
+export interface NoteListProps {
+  lists: [];
+}
 
-export interface NoteListStates {}
+export interface NoteListStates {
+  characterCategory: string;
+}

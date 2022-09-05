@@ -1,3 +1,6 @@
+export function handleChangeReadMode(readMode: number) {
+  return { type: "HANDLE_CHANGE_READ_MODE", payload: readMode };
+}
 export function handleOpenMenu(isOpenMenu: boolean) {
   return { type: "HANDLE_OPEN_MENU", payload: isOpenMenu };
 }

@@ -1,8 +1,6 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 // import RecentBooks from "../../utils/readUtils/recordRecent";
-import { ViewerProps, ViewerState } from "./interface";
-// import localforage from "localforage";
-// import _ from "underscore";
 // import BookUtil from "../../utils/fileUtils/bookUtil";
 // import BackToMain from "../../components/backToMain";
 // import PopupMenu from "../../components/popups/popupMenu";
@@ -99,7 +97,7 @@ class Viewer extends React.Component {
           />
         )} */}
         <iframe
-          src="./lib/pdf/web/viewer.html?file=1659355599655"
+          src={`./lib/pdf/web/viewer.html${window.location.search}`}
           title="hello"
           width="100%"
           height="100%"

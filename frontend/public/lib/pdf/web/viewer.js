@@ -3145,21 +3145,16 @@
       let webViewerOpenFileViaURL;
       {
         webViewerOpenFileViaURL = async function (file) {
-          console.log("fetching book");
-          const data = {
-            bookId: "6302bc1323ee4e4094f9d8bb",
-          };
-          let url = "http://localhost:5004/api/book/get-book";
+          let params = new URL(document.location).searchParams;
+          let bookID = params.get("id");
+          let url = `http://localhost:5004/book/${bookID}`;
           const response = await fetch(url, {
-            method: "POST",
+            method: "get",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
           });
-          let book = await response.json().then((data) => data.result);
-          console.log(book.content.data);
-          
+          let book = await response.json().then((data) => data);
           PDFViewerApplication.open(new Uint8Array(book.content.data).buffer);
           // if (window.require) {
           //   var fs = window.require("fs");

@@ -46,5 +46,6 @@ export type stateType = {
     isOpenMenu: boolean;
     isChangeDirection: boolean;
     isShowBookmark: boolean;
+    readMode: number;
   };
 };

@@ -1,65 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
-import { IBook } from "../../types/book";
 import "./style.css";
+import { useDispatch } from "react-redux";
+import { handleFetchBooks } from "../../store/actions";
 import { Button } from "@mui/material";
-import { fetchMD5 } from "../../utils/fileUtils/md5Util";
-import { ABtoBuffer, ABtoBase64 } from "../../utils/fileUtils/typeUtils";
 const ImportFromLocal = () => {
-  const [img, setImg] = useState(
-    "data:image/png;base64," +
-      "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-  );
-  async function getFileContent(file: any) {
-    try {
-      fetchMD5(file);
-    } catch (err) {
-      console.log(err);
-    }
-    // Common information
-    let bookName = file.name.split(".")[0];
-    let reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    // Book content
-    reader.onload = async (e) => {
-      const fileArrayBuffer = (e.target as any).result;
-      let bookContent = ABtoBuffer(fileArrayBuffer);
-      let bookCover =
-        "data:image/png/jpeg;base64," + ABtoBase64(fileArrayBuffer);
-      setImg(bookCover);
-      let book = {
-        name: bookName,
-        content: bookContent,
-      };
+  const dispatch = useDispatch();
 
-      // await axios
-      //   .post("http://localhost:5004/api/book", book)
-      //   .then(({ data }) => console.log(data))
-      //   .catch(({ error }) => console.log(error));
-      // await axios
-      //   .get("http://localhost:5004/api/book")
-      //   .then(({ data }) => console.log(data));
-    };
-  }
-
-  function handleImportedBook(file: any) {
-    // const books: IBook[] = [];
-    // console.log(file);
-    getFileContent(file);
-    // books.push();
-    // console.log(books);
-  }
-
-  const onImportBook = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onImportBook = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    const results: IBook[] = [];
-    if (files !== null)
-      for (let i = 0; i < files.length; i++) handleImportedBook(files[i]);
+    const filesData = new FormData();
+    if (files)
+      for (let i = 0; i < files.length; i++) {
+        filesData.append(`files`, files[i]);
+      }
+    const result = await axios
+      .post("http://localhost:5004/book", filesData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(({ data }) => data.success);
+    console.log(result.length);
+    if (result.length >= 1)
+      axios
+        .get("http://localhost:5004/book")
+        .then(({ data }) => dispatch(handleFetchBooks(data.book)));
   };
 
   return (
     <div>
-      {img !== "" && <img src={img} alt="ssd" />}
       <input
         type="file"
         id="input-import-book"

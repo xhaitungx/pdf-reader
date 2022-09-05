@@ -4,6 +4,7 @@ const initState = {
   menuMode: "menu",
   isChangeDirection: false,
   isShowBookmark: false,
+  readMode: 0,
 };
 export function viewArea(
   state = initState,
@@ -45,6 +46,11 @@ export function viewArea(
       return {
         ...state,
         isChangeDirection: action.payload,
+      };
+    case "HANDLE_CHANGE_READ_MODE":
+      return {
+        ...state,
+        readMode: action.payload,
       };
     default:
       return state;

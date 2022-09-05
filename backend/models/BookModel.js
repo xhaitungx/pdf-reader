@@ -4,7 +4,7 @@ const bookSchema = mongoose.Schema(
   {
     softDelete: { type: Boolean, default: false },
     name: String,
-    cover: Buffer,
+    cover: String,
     md5: String,
     content: Buffer,
     cfi: Object,
