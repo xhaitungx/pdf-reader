@@ -42,8 +42,6 @@ export type stateType = {
   };
   viewArea: {
     selection: string;
-    menuMode: string;
-    isOpenMenu: boolean;
     isChangeDirection: boolean;
     isShowBookmark: boolean;
     readMode: number;

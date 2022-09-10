@@ -1,7 +1,6 @@
 class Note {
   id: string;
   bookID: string;
-  date: { year: number; month: number; day: number };
   chapter: string;
   chapterIndex: number;
   text: string;
@@ -24,11 +23,6 @@ class Note {
   ) {
     this.id = id;
     this.bookID = bookID;
-    this.date = {
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
-    };
     this.chapter = chapter;
     this.chapterIndex = chapterIndex;
     this.text = text;

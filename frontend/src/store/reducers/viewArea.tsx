@@ -1,7 +1,5 @@
 const initState = {
   selection: null,
-  isOpenMenu: false,
-  menuMode: "menu",
   isChangeDirection: false,
   isShowBookmark: false,
   readMode: 0,
@@ -11,11 +9,6 @@ export function viewArea(
   action: { type: string; payload: any }
 ) {
   switch (action.type) {
-    case "HANDLE_OPEN_MENU":
-      return {
-        ...state,
-        isOpenMenu: action.payload,
-      };
     case "HANDLE_OPEN_HIGHLIGHT":
       return {
         ...state,

@@ -6,7 +6,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import PageRoutes from "./router/PageRoutes";
 import reportWebVitals from "./reportWebVitals";
 import CssBaseline from "@mui/material/CssBaseline";
-import MultiButton from "./components/multi-button";
 import "./index.css";
 
 const container = document.getElementById("root")!;
@@ -17,8 +16,7 @@ root.render(
     <Router>
       <CssBaseline />
       <Provider store={store}>
-        {/* <PageRoutes /> */}
-        <MultiButton />
+        <PageRoutes />
       </Provider>
     </Router>
   </React.StrictMode>

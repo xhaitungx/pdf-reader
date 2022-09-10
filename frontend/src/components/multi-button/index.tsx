@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { handleChangeReadMode } from "../../store/actions";
+import { stateType } from "../../store";
 import { Box, Fab, Tooltip } from "@mui/material";
 import { Translate, Notes, Visibility, Cancel } from "@mui/icons-material";
 import "./style.css";
 const MultiButton = () => {
   const [isHover, setIsHover] = useState(false);
-  const readMode = useSelector((state) => state.viewArea.readMode);
+  const readMode = useSelector((state: stateType) => state.viewArea.readMode);
   const dispatch = useDispatch();
 
   const onChangeReadMode = (readModeNumber) => {

@@ -1,5 +1,7 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import MultiButton from "../../components/multi-button";
+import MenuPopup from "../../components/popups/popup-menu";
+import { ViewerProps } from "./interface";
 // import RecentBooks from "../../utils/readUtils/recordRecent";
 // import BookUtil from "../../utils/fileUtils/bookUtil";
 // import BackToMain from "../../components/backToMain";
@@ -8,19 +10,19 @@ import { useParams } from "react-router-dom";
 // import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 // import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 class Viewer extends React.Component {
-  // constructor(props: ViewerProps) {
-  //   super(props);
-  //   this.state = {
-  //     href: "",
-  //     title: "",
-  //     cfiRange: null,
-  //     contents: null,
-  //     rect: null,
-  //     pageWidth: 0,
-  //     pageHeight: 0,
-  //     loading: true,
-  //   };
-  // }
+  constructor(props: ViewerProps) {
+    super(props);
+    this.state = {
+      href: "",
+      title: "",
+      cfiRange: null,
+      contents: null,
+      rect: null,
+      pageWidth: 0,
+      pageHeight: 0,
+      loading: true,
+    };
+  }
   // UNSAFE_componentWillMount() {
   //   this.props.handleFetchBookmarks();
   //   this.props.handleFetchNotes();
@@ -38,7 +40,6 @@ class Viewer extends React.Component {
     //       result[_.findIndex(result, { key })] ||
     //       JSON.parse(localStorage.getItem("tempBook") || "{}");
     //   }
-
     //   document.title = book.name + " - Koodo Reader";
     //   this.props.handleReadingState(true);
     //   RecentBooks.setRecent(key);
@@ -46,40 +47,13 @@ class Viewer extends React.Component {
     //   this.setState({ title: book.name + " - Koodo Reader" });
     //   this.setState({ href: BookUtil.getPDFUrl(book) });
     // });
-    const viewer = document.querySelector(".ebook-viewer");
-    if (viewer) viewer.setAttribute("style", "height:100vh;overflow-y:hidden");
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    iframe.onload = () => {
-      // let doc: any =
-      //   iframe.contentWindow || iframe.contentDocument?.defaultView;
-      // this.setState({ loading: false });
-      // // pdfMouseEvent();
-      // doc.document.addEventListener("click", (event: any) => {
-      //   event.preventDefault();
-      //   // handleLinkJump(event);
-      // });
-      // doc.document.addEventListener("mouseup", () => {
-      //   if (!doc!.getSelection()) return;
-      //   var rect = doc!
-      //     .getSelection()!
-      //     .getRangeAt(0)
-      //     .getBoundingClientRect();
-      //   this.setState({
-      //     rect,
-      //     pageWidth: doc.document.body.scrollWidth,
-      //     pageHeight: doc.document.body.scrollHeight,
-      //   });
-      //   // iWin.getSelection() && showHighlight(getHightlightCoords());
-      // });
-    };
   }
 
   render() {
     return (
       <div className="ebook-viewer" id="page-area">
+        <MenuPopup />
+        <MultiButton />
         {/* {!this.state.loading && (
           <PopupMenu
             {...{
