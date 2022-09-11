@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import "./style.css";
 const NotePopup = (props) => {
-  const [Note, setNote] = useState({
+  const [note, setNote] = useState({
+    content: "",
     color: "#ffc701",
   });
 
@@ -21,26 +22,32 @@ const NotePopup = (props) => {
     "#d4ddda",
   ];
 
+  const onInputNote = (e) => {
+    setNote({ ...note, content: e.target.value });
+  };
+
   const onSubmit = () => {
-    const note = (
-      document.querySelector(".pop-up-note-input") as HTMLInputElement
-    ).value;
-    console.log(note);
+    console.log(note.content);
+    setNote({ ...note, content: "" });
   };
 
   return (
     <>
       <div className="pop-up-note">
-        <textarea className="pop-up-note-input" />
+        <textarea
+          className="pop-up-note-input"
+          value={note.content}
+          onChange={onInputNote}
+        />
         <div className="pop-up-note-highlight">
           {hightlightColor.map((color) => (
             <div
               className="highlight-button"
               style={{
                 background: color,
-                border: Note.color === color ? "2px solid black" : "",
+                border: note.color === color ? "2px solid black" : "",
               }}
-              onClick={(e) => setNote({ color })}
+              onClick={(e) => setNote({ ...note, color })}
             ></div>
           ))}
         </div>

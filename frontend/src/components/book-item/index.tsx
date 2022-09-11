@@ -7,7 +7,7 @@ const BookItem = ({ book }) => {
         <img
           src={book.cover}
           style={{ width: "120px", height: "160px" }}
-          alt=""
+          alt="book.name"
         />
         <p>{book.name}</p>
       </a>

@@ -1,3 +1,7 @@
+.book-list-heading{
+  display:flex;
+}
+
 .book-list-container {
   display: flex;
   gap: 2rem;

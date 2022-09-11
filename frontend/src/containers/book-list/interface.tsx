@@ -8,4 +8,7 @@ export interface BookListProps {
 export interface BookListStates {
   searchInput: string;
   isLoading: boolean;
+  bookListMenu: boolean;
+  anchorEl: null | HTMLElement;
+  open: boolean;
 }
