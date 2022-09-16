@@ -1,5 +1,6 @@
 const pdfjsLib = require("pdfjs-dist/legacy/build/pdf");
 const Book = require("../models/BookModel");
+const User = require("../models/UserModel");
 const { createCanvas } = require("canvas");
 module.exports = {
   isNotRepeat: async function (files, length) {
@@ -17,7 +18,7 @@ module.exports = {
     }
     return books;
   },
-  createBook: async function (files, res) {
+  createBook: async function (files,userId, res) {
     const formattedBooks = files.validBook.map(
       async ({ name, data: content, md5 }) =>
         Object({
@@ -30,10 +31,14 @@ module.exports = {
         })
     );
     Book.create(await Promise.all(formattedBooks)).then((result) =>
-      res.status(200).json({
+      {
+        const bookId = result.map((book) => book._id);
+        User.findByIdAndUpdate(userId ,  { $push: { books: bookId } }).then((result)=>console.log(result));
+        
+        res.status(200).json({
         success: result.map((book) => book.name),
         fail: files.repeatedBook.map((book) => book.name),
-      })
+      })}
     );
   },
   getPDFCover: async function (file) {

@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
-    username: String,
+    email: String,
     password: String,
-    books: [{ type: Schema.Types.ObjectId, ref: "Book" }],
-    notes: [{ type: Schema.Types.ObjectId, ref: "Note" }],
-    vocabularies: [{ type: Schema.Types.ObjectId, ref: "Vocabulary" }],
+    books: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
+    vocabularies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vocabulary" }],
   },
   { timestamps: true }
 );

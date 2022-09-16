@@ -1,13 +1,17 @@
 const Book = require("../models/BookModel");
 const BookUtils = require("../utils/BookUtils");
 const { connect } = require("../config/db");
+const User = require("../models/UserModel");
 module.exports = {
   show: async function (req, res) {
     connect();
-    const books = await Book.find({}).select("-content");
-    res.status(200).json({
-      book: books,
-    });
+    const { userId } = req.body;
+    console.log(userId);
+    const books = await User.findById(userId).select('books -_id').populate({
+      path: 'books',
+      select: '-content'
+  });
+    res.status(200).json(books);
   },
   detail: async function (req, res) {
     connect();
@@ -20,20 +24,23 @@ module.exports = {
   },
   create: async function (req, res) {
     connect();
+    const userId = req.body.userId;
     const books = await BookUtils.isNotRepeat(
       req.files.files,
       req.files.length
     );
-    BookUtils.createBook(books, res);
+    BookUtils.createBook(books,userId, res);
   },
   delete: function (req, res) {
-    connect();
+    connect();   
     const { id } = req.params;
     Book.findByIdAndDelete(id)
       .then((result) =>
-        res.status(200).json({
+        {
+          console.log(result);
+          res.status(200).json({
           message: "Xóa sách thành công",
-        })
+        })}
       )
       .catch((err) =>
         res.status(404).json({

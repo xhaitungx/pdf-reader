@@ -7,7 +7,7 @@ import PageRoutes from "./router/PageRoutes";
 import reportWebVitals from "./reportWebVitals";
 import CssBaseline from "@mui/material/CssBaseline";
 import "./index.css";
-
+import Login from "./views/login";
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 
@@ -16,7 +16,8 @@ root.render(
     <Router>
       <CssBaseline />
       <Provider store={store}>
-        <PageRoutes />
+        {/* <PageRoutes /> */}
+        <Login />
       </Provider>
     </Router>
   </React.StrictMode>

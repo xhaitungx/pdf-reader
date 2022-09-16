@@ -1,4 +1,4 @@
-.book-item {
+.book-item, .book-cover {
   width: 120px;
   height: 260px;
 }
