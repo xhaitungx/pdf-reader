@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-
+import { UserApi } from "../../api";
 import "./style.css";
 
 const Login = () => {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
-    rePassword: "",
+    email: "testuser1@gmail.com",
+    password: "testuser1@gmail.com",
+    rePassword: "testuser1@gmail.com",
   });
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
@@ -29,10 +29,14 @@ const Login = () => {
         form.email
       );
     const rePasswordValidate = form.password === form.rePassword;
-    setValidator({
-      emailError: !emailValidate,
-      rePasswordError: !rePasswordValidate,
-    });
+    if (emailValidate === false || rePasswordValidate === false) {
+      setValidator({
+        emailError: !emailValidate,
+        rePasswordError: !rePasswordValidate,
+      });
+      return false;
+    }
+    return true;
   };
 
   const handleInputEmail = (e) => {
@@ -48,19 +52,30 @@ const Login = () => {
     setForm({ ...form, rePassword: e.target.value });
   };
 
-  const submitLogin = (e) => {
+  const submitLogin = async (e) => {
     // setIsSubmit(true);
-    formValidation();
+    if (!formValidation()) return;
+    const result = await UserApi("login", {
+      email: form.email,
+      password: form.password,
+    });
+    window.localStorage.setItem("userId", result.userId);
+    window.location.href = "/management";
     // setIsSubmit(false);
   };
 
-  const submitRegister = (e) => {
+  const submitRegister = async (e) => {
     // setIsSubmit(true);
-    formValidation();
+    if (!formValidation()) return;
+    const result = await UserApi("register", {
+      email: form.email,
+      password: form.password,
+    });
+    window.localStorage.setItem("userId", result.userId);
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <div className="form-container">
         <div style={{ display: "flex" }}>
           <Button

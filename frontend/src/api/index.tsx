@@ -1,21 +1,43 @@
 import axios from "axios";
 
 const Axios = axios.create({
-  baseURL: "https://localhost:5004.com/",
+  baseURL: "http://localhost:5004",
 });
-const userId = window.sessionStorage.getItem("userId");
 
-const BookApi = async (type, payload) => {
+export const BookApi = async (type, bookId = "", payload = {}) => {
+  const userId = window.localStorage.getItem("userId");
   const body = {
     userId: userId,
+    bookId: bookId,
     payload: payload,
   };
   switch (type) {
     case "addBooks":
-      return await Axios.post("/book", body);
+      return await Axios.post("/book", body).then(({ data }) => data);
     case "getBooksList":
-      return await Axios.post("/book/books-list", body);
+      return await Axios.post("/book/books-list", body).then(
+        ({ data }) => data
+      );
     case "getBook":
-      return await Axios.post("/book/book-detail", body);
+      return await Axios.post("/book/book-detail", body).then(
+        ({ data }) => data
+      );
+  }
+};
+
+export const UserApi = async (type, payload) => {
+  const userId = window.localStorage.getItem("userId");
+  const body = {
+    userId: userId,
+    payload: payload,
+  };
+  console.log(userId);
+  switch (type) {
+    case "register":
+      return await Axios.post("/user/register", body).then(({ data }) => data);
+    case "login":
+      return await Axios.post("/user/login", body.payload).then(
+        ({ data }) => data
+      );
   }
 };

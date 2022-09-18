@@ -1,7 +1,10 @@
 import React from "react";
 import MultiButton from "../../components/multi-button";
 import MenuPopup from "../../components/popups/popup-menu";
-import { ViewerProps } from "./interface";
+import { ViewerProps, ViewerState } from "./interface";
+import { BookApi } from "../../api";
+import localforage from "localforage";
+
 // import RecentBooks from "../../utils/readUtils/recordRecent";
 // import BookUtil from "../../utils/fileUtils/bookUtil";
 // import BackToMain from "../../components/backToMain";
@@ -9,7 +12,7 @@ import { ViewerProps } from "./interface";
 // import { Toaster } from "react-hot-toast";
 // import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 // import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
-class Viewer extends React.Component {
+class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
@@ -28,7 +31,17 @@ class Viewer extends React.Component {
   //   this.props.handleFetchNotes();
   //   this.props.handleFetchBooks();
   // }
-  componentDidMount() {
+  async componentDidMount() {
+    let bookId = window.location.search.split("=").reverse()[0];
+    const result = await BookApi("getBook", bookId);
+    document.title = result.books[0].name;
+    localforage.setItem("bookContent", result.books[0].content.data, () => {
+      if (localforage.getItem("bookContent") !== null)
+        this.setState({
+          loading: false,
+        });
+    });
+    // console.log(localforage.getItem("bookContent"));
     // let urls = document.location.href.split("/");
     // let key = urls[urls.length - 1].split("?")[0];
     // localforage.getItem("books").then((result: any) => {
@@ -51,10 +64,14 @@ class Viewer extends React.Component {
 
   render() {
     return (
-      <div className="ebook-viewer" id="page-area">
-        <MenuPopup />
-        <MultiButton />
-        {/* {!this.state.loading && (
+      <>
+        {this.state.loading ? (
+          <div>Loading</div>
+        ) : (
+          <div className="ebook-viewer" id="page-area">
+            <MenuPopup />
+            <MultiButton />
+            {/* {!this.state.loading && (
           <PopupMenu
             {...{
               rendition: {
@@ -70,16 +87,18 @@ class Viewer extends React.Component {
             }}
           />
         )} */}
-        <iframe
-          src={`./lib/pdf/web/viewer.html${window.location.search}`}
-          title="hello"
-          width="100%"
-          height="100%"
-        >
-          Loading
-        </iframe>
-        {/* <BackToMain /> <Toaster /> */}
-      </div>
+            <iframe
+              src={`./lib/pdf/web/viewer.html${window.location.search}`}
+              title="hello"
+              width="100%"
+              height="100%"
+            >
+              Loading
+            </iframe>
+            {/* <Toaster /> */}
+          </div>
+        )}
+      </>
     );
   }
 }

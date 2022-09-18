@@ -9,6 +9,4 @@ export interface BookListStates {
   searchInput: string;
   isLoading: boolean;
   bookListMenu: boolean;
-  anchorEl: null | HTMLElement;
-  open: boolean;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "./style.css";
+import { BookApi } from "../../api";
 import { useDispatch } from "react-redux";
 import { handleFetchBooks } from "../../store/actions";
 import { Button } from "@mui/material";
@@ -8,12 +9,15 @@ const ImportFromLocal = () => {
   const dispatch = useDispatch();
 
   const onImportBook = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userId = window.localStorage.getItem("userId");
     const files = e.target.files;
     const filesData = new FormData();
     if (files)
       for (let i = 0; i < files.length; i++) {
         filesData.append(`files`, files[i]);
       }
+    if (userId !== null && userId !== undefined)
+      filesData.append(`userId`, userId);
     const result = await axios
       .post("http://localhost:5004/book", filesData, {
         headers: {
@@ -21,11 +25,10 @@ const ImportFromLocal = () => {
         },
       })
       .then(({ data }) => data.success);
-    console.log(result.length);
-    if (result.length >= 1)
-      axios
-        .get("http://localhost:5004/book")
-        .then(({ data }) => dispatch(handleFetchBooks(data.book)));
+    if (result.length >= 1) {
+      const result = await BookApi("getBooksList");
+      dispatch(handleFetchBooks(result.books));
+    }
   };
 
   return (

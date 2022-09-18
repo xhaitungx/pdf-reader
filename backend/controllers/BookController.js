@@ -2,34 +2,43 @@ const Book = require("../models/BookModel");
 const BookUtils = require("../utils/BookUtils");
 const { connect } = require("../config/db");
 const User = require("../models/UserModel");
+const { response } = require("express");
 module.exports = {
   show: async function (req, res) {
     connect();
     const { userId } = req.body;
-    console.log(userId);
     const books = await User.findById(userId).select('books -_id').populate({
       path: 'books',
-      select: '-content'
+      select: '-content',
+      match:{
+        softDelete: false
+      }
   });
     res.status(200).json(books);
   },
   detail: async function (req, res) {
     connect();
-    const bookID = req.params.id;
-    const result = await Book.findById(bookID).then((result) => result);
+    const {userId, bookId} = req.body;
+    const result = await User.findById(userId).select('books -_id').populate({
+      path:"books",
+      select:"content name",
+      match:
+      {
+        _id: bookId
+      }
+    });
     if (result)
-      res.status(200).json({
-        content: result.content,
-      });
+      res.status(200).json(result);
   },
   create: async function (req, res) {
     connect();
-    const userId = req.body.userId;
+    const {userId} = req.body;
     const books = await BookUtils.isNotRepeat(
+      userId,
       req.files.files,
       req.files.length
     );
-    BookUtils.createBook(books,userId, res);
+    BookUtils.createBook(userId, books, res);
   },
   delete: function (req, res) {
     connect();   
@@ -48,6 +57,19 @@ module.exports = {
         })
       );
   },
+  hardDelete: function (req, res) {
+    connect();
+    const {bookId} = req.body;
+    Book.findByIdAndDelete(bookId)
+      .then((result) =>
+        res.status(200).json(result)
+      )
+      .catch((err) =>
+        res.status(404).json({
+          message: "Xóa sách thành công",
+        })
+      );
+  },
   deleteAll: function (req, res) {
     connect();
     Book.deleteMany({})
@@ -63,20 +85,32 @@ module.exports = {
       );
   },
   update: function (req, res) {
-    console.log("create");
-  },
-  softDelete: function (req, res) {
     connect();
-    const { id } = req.params;
-    Book.findByIdAndDelete(id)
+    const {bookId, payload} = req.body;
+    Book.findByIdAndUpdate(bookId, payload)
       .then((result) =>
-        res.status(200).json({
-          message: "Xóa sách thành công",
-        })
+      res.status(200).json(result)
       )
       .catch((err) =>
         res.status(404).json({
-          message: "Xóa sách thất bại",
+          message: "Lỗi hệ thống",
+        })
+      );
+  },
+  softDelete: function (req, res) {
+    connect();
+    const { bookId } = req.body;
+    Book.findByIdAndUpdate(bookId, {
+      softDelete: true
+    })
+      .then((result) =>
+      res.status(200).json({
+        message: "Sách đã được chuyển vào thùng rác",
+      })
+      )
+      .catch((err) =>
+        res.status(404).json({
+          message: "Lỗi hệ thống",
         })
       );
   },

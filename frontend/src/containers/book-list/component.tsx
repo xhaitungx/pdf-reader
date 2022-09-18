@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import { BookApi } from "../../api";
 import BookItem from "../../components/book-item";
 import Loading from "../../components/loading";
 import { BookListProps, BookListStates } from "./interface";
@@ -19,12 +19,7 @@ class BookList extends React.Component<BookListProps, BookListStates> {
       searchInput: "",
       isLoading: false,
       bookListMenu: false,
-      anchorEl: null,
-      open: false,
     };
-    this.setAnchorEl = this.setAnchorEl.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -33,23 +28,15 @@ class BookList extends React.Component<BookListProps, BookListStates> {
       this.setState({
         isLoading: true,
       });
-      await axios.get("http://localhost:5004/book").then(({ data }) => {
-        this.props.handleFetchBooks(data.book);
-      });
+      const result = await BookApi("getBooksList");
+      console.log(result);
+      if (result.books.length > 0) {
+        this.props.handleFetchBooks(result.books);
+        this.setState({
+          isLoading: true,
+        });
+      } else console.log("rong");
     }
-  }
-
-  handleClick(event) {
-    this.setAnchorEl(event.currentTarget);
-  }
-  setAnchorEl(value) {
-    this.setState({
-      anchorEl: value,
-      open: !this.state.open,
-    });
-  }
-  handleClose() {
-    this.setAnchorEl(null);
   }
 
   filterBooks(books) {
@@ -64,33 +51,16 @@ class BookList extends React.Component<BookListProps, BookListStates> {
     });
   }
 
-  renderMenu() {
-    return (
-      <Menu
-        id="fade-menu"
-        anchorEl={this.state.anchorEl}
-        open={this.state.open}
-        onClose={this.handleClose}
-      >
-        <TextField
-          value={this.state.searchInput}
-          onChange={this.handleInput}
-          placeholder="Tìm kiếm sách"
-        />
-        <MenuItem onClick={this.handleClose}>Xóa sách</MenuItem>
-      </Menu>
-    );
-  }
-
   render() {
     return (
       <>
         <div className="book-list-heading" style={{ color: "white" }}>
           <Typography variant="h4">BookList</Typography>
-          <IconButton onClick={this.handleClick}>
-            <MoreVertIcon />
-          </IconButton>
-          {this.renderMenu()}
+          <TextField
+            value={this.state.searchInput}
+            onChange={this.handleInput}
+            placeholder="Tìm kiếm sách"
+          />
         </div>
 
         {this.props.books ? (

@@ -3145,17 +3145,18 @@
       let webViewerOpenFileViaURL;
       {
         webViewerOpenFileViaURL = async function (file) {
-          let params = new URL(document.location).searchParams;
-          let bookID = params.get("id");
-          let url = `http://localhost:5004/book/${bookID}`;
-          const response = await fetch(url, {
-            method: "get",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          let book = await response.json().then((data) => data);
-          PDFViewerApplication.open(new Uint8Array(book.content.data).buffer);
+          const bookContent = await localforage.getItem("bookContent");
+          // let params = new URL(document.location).searchParams;
+          // let bookID = params.get("id");
+          // let url = `http://localhost:5004/book/${bookID}`;
+          // const response = await fetch(url, {
+          //   method: "get",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          // });
+          // let book = await response.json().then((data) => data);
+          PDFViewerApplication.open(new Uint8Array(bookContent).buffer);
           // if (window.require) {
           //   var fs = window.require("fs");
           //   var path = window.require("path");

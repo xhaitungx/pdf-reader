@@ -3,7 +3,7 @@ const Book = require("../models/BookModel");
 const User = require("../models/UserModel");
 const { createCanvas } = require("canvas");
 module.exports = {
-  isNotRepeat: async function (files, length) {
+  isNotRepeat: async function (userId,files, length) {
     let arrayFiles = [];
     let books = {
       validBook: [],
@@ -11,14 +11,21 @@ module.exports = {
     };
     if (files.length === undefined) arrayFiles.push(files);
     else arrayFiles = files;
+    console.log(userId);
     for (let i = 0; i < arrayFiles.length; i++) {
-      const isRepeat = await Book.exists({ md5: arrayFiles[i].md5 });
-      if (isRepeat) books.repeatedBook.push(arrayFiles[i]);
+      const isRepeat = await User.findById(userId).select("books -_id").populate({
+        path: 'books',
+        match:{
+          md5: arrayFiles[i].md5
+        }
+    });
+      if (isRepeat.books.length !== 0) books.repeatedBook.push(arrayFiles[i]);
       else books.validBook.push(arrayFiles[i]);
+      console.log(books);
     }
     return books;
   },
-  createBook: async function (files,userId, res) {
+  createBook: async function (userId, files, res) {
     const formattedBooks = files.validBook.map(
       async ({ name, data: content, md5 }) =>
         Object({
@@ -34,7 +41,6 @@ module.exports = {
       {
         const bookId = result.map((book) => book._id);
         User.findByIdAndUpdate(userId ,  { $push: { books: bookId } }).then((result)=>console.log(result));
-        
         res.status(200).json({
         success: result.map((book) => book.name),
         fail: files.repeatedBook.map((book) => book.name),
