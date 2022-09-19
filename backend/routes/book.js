@@ -1,6 +1,8 @@
 const BookController = require("../controllers/BookController");
 const router = require("express").Router();
+const TempController = require("../controllers/TempController");
 
+router.post("/reset", TempController.reset);
 router.post("/", BookController.create);
 router.post("/books-list", BookController.show);
 router.post("/book-detail", BookController.detail);

@@ -25,16 +25,10 @@ class BookList extends React.Component<BookListProps, BookListStates> {
 
   async componentDidMount() {
     if (!this.props.books) {
-      this.setState({
-        isLoading: true,
-      });
       const result = await BookApi("getBooksList");
       console.log(result);
       if (result.books.length > 0) {
         this.props.handleFetchBooks(result.books);
-        this.setState({
-          isLoading: true,
-        });
       } else console.log("rong");
     }
   }

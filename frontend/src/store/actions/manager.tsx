@@ -1,5 +1,5 @@
 import BookModel from "../../model/Book";
-
+import VocabularyModel from "../../model/Vocabulary";
 export function handleFetchBooks(books: BookModel[]) {
   return { type: "HANDLE_FETCH_BOOKS", payload: books };
 }
@@ -12,7 +12,7 @@ export function handleFetchNotes(notes: BookModel[]) {
   return { type: "HANDLE_FETCH_NOTES", payload: notes };
 }
 
-export function handleFetchVocabularies(vocabularies: BookModel[]) {
+export function handleFetchVocabularies(vocabularies: VocabularyModel[]) {
   return { type: "HANDLE_FETCH_VOCABULARIES", payload: vocabularies };
 }
 

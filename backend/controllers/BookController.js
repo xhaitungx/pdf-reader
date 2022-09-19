@@ -6,6 +6,7 @@ const { response } = require("express");
 module.exports = {
   show: async function (req, res) {
     connect();
+    console.log("jere")
     const { userId } = req.body;
     const books = await User.findById(userId).select('books -_id').populate({
       path: 'books',

@@ -25,6 +25,22 @@ export const BookApi = async (type, bookId = "", payload = {}) => {
   }
 };
 
+export const VocabulariesApi = async (type, payload = {}) => {
+  const userId = window.localStorage.getItem("userId");
+  const body = {
+    userId: userId,
+    payload: payload,
+  };
+  switch (type) {
+    case "addVocabulary":
+      return await Axios.post("/vocabulary", body).then(({ data }) => data);
+    case "getVocabularies":
+      return await Axios.post("/vocabulary/vocabulary-list", body).then(
+        ({ data }) => data
+      );
+  }
+};
+
 export const UserApi = async (type, payload) => {
   const userId = window.localStorage.getItem("userId");
   const body = {

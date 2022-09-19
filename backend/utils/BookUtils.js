@@ -1,9 +1,10 @@
 const pdfjsLib = require("pdfjs-dist/legacy/build/pdf");
 const Book = require("../models/BookModel");
 const User = require("../models/UserModel");
+const VocabularyList = require("../models/VocabularyListModel");
 const { createCanvas } = require("canvas");
 module.exports = {
-  isNotRepeat: async function (userId,files, length) {
+  isNotRepeat: async function (userId, files, length) {
     let arrayFiles = [];
     let books = {
       validBook: [],
@@ -11,17 +12,17 @@ module.exports = {
     };
     if (files.length === undefined) arrayFiles.push(files);
     else arrayFiles = files;
-    console.log(userId);
     for (let i = 0; i < arrayFiles.length; i++) {
-      const isRepeat = await User.findById(userId).select("books -_id").populate({
-        path: 'books',
-        match:{
-          md5: arrayFiles[i].md5
-        }
-    });
+      const isRepeat = await User.findById(userId)
+        .select("books -_id")
+        .populate({
+          path: "books",
+          match: {
+            md5: arrayFiles[i].md5,
+          },
+        });
       if (isRepeat.books.length !== 0) books.repeatedBook.push(arrayFiles[i]);
       else books.validBook.push(arrayFiles[i]);
-      console.log(books);
     }
     return books;
   },
@@ -37,15 +38,27 @@ module.exports = {
           ),
         })
     );
-    Book.create(await Promise.all(formattedBooks)).then((result) =>
-      {
-        const bookId = result.map((book) => book._id);
-        User.findByIdAndUpdate(userId ,  { $push: { books: bookId } }).then((result)=>console.log(result));
-        res.status(200).json({
+    Book.create(await Promise.all(formattedBooks)).then(async (result) => {
+      const booksId = result.map((book) => book._id);
+      const vocabularyListId = result.map( async (book) =>
+        await VocabularyList.create({
+          bookId: book._id,
+          bookName: book.name
+        }).then((result) => result._id)
+      );
+      // const promiseValue = await Promise.all(vocabularyListId);
+      const promiseResponse = await Promise.all(vocabularyListId);
+      User.findByIdAndUpdate(userId, {
+        $push: {
+          books: booksId,
+          vocabularies: promiseResponse,
+        },
+      }).then((result) => console.log(result));
+      res.status(200).json({
         success: result.map((book) => book.name),
         fail: files.repeatedBook.map((book) => book.name),
-      })}
-    );
+      });
+    });
   },
   getPDFCover: async function (file) {
     return new Promise((resolve, reject) => {

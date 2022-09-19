@@ -1,14 +1,24 @@
 class Vocabulary {
-  _id: string;
+  id: string;
+  bookId: string;
+  bookName: string;
+  list: IVocabulary[];
+  constructor(
+    id: string,
+    bookId: string,
+    bookName: string,
+    list: IVocabulary[]
+  ) {
+    this.id = id;
+    this.bookId = bookId;
+    this.bookName = bookName;
+    this.list = list;
+  }
+}
+
+interface IVocabulary {
   text: string;
   meaning: string;
-  example: string[];
-  constructor(id: string, text: string, meaning: string, example: string[]) {
-    this._id = id;
-    this.text = text;
-    this.meaning = meaning;
-    this.example = example;
-  }
 }
 
 export default Vocabulary;

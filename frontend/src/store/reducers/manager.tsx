@@ -1,8 +1,8 @@
 const initState = {
   books: null,
-  deletedBooks: [],
-  notes: [],
-  vocabularies: [],
+  deletedBooks: null,
+  notes: null,
+  vocabularies: null,
   message: "Add Successfully",
 };
 export function manager(
