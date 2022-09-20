@@ -4,29 +4,16 @@ import { AutoAwesomeMotion } from "@mui/icons-material";
 import FlashCard from "../flash-card";
 import Carousel from "react-material-ui-carousel";
 import "./style.css";
-const FlashCardCarousel = () => {
+const FlashCardCarousel = ({ vocabularyList }) => {
   const [currentCard, setCurrentCard] = useState(1);
-  const vocabularyList = [
-    {
-      text: "Hello",
-      meaning: "Xin chào",
-    },
-    {
-      text: "What do yo mean?",
-      meaning: "Ý bạn là sao?",
-    },
-    {
-      text: "What?",
-      meaning: "Gì vậy?",
-    },
-  ];
   return (
-    <div className="flash-card-carousel-container" style={{ width: "30%" }}>
+    <div className="flash-card-carousel-container" style={{ width: "30vw" }}>
       <div className="card-number-status">
         <AutoAwesomeMotion />
         {currentCard + "/" + vocabularyList.length}
       </div>
       <Carousel
+        sx={{ background: "transparent" }}
         animation="slide"
         navButtonsAlwaysVisible
         cycleNavigation={false}

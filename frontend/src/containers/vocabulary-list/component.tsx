@@ -28,9 +28,11 @@ class VocabularyList extends React.Component<
         <h1>VocabularyList</h1>
         {this.props.vocabularies ? (
           <div className="vocabulary-list-container container">
-            {this.props.vocabularies.map((listVocabulary) => (
-              <VocabularyTable listVocabulary={listVocabulary} />
-            ))}
+            {this.props.vocabularies
+              .filter((listVocabulary) => listVocabulary.list.length > 0)
+              .map((listVocabulary) => (
+                <VocabularyTable listVocabulary={listVocabulary} />
+              ))}
           </div>
         ) : (
           <Loading />

@@ -61,8 +61,12 @@ const vocabularyTable = ({ listVocabulary }) => {
           </Table>
         </TableContainer>
       </div>
-      <Dialog open={open}>
-        <FlashCardCarousel />
+      <Dialog
+        sx={{ background: "transparent" }}
+        open={open}
+        onClose={handleClose}
+      >
+        <FlashCardCarousel vocabularyList={listVocabulary.list} />
       </Dialog>
     </>
   );
