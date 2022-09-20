@@ -1,0 +1,15 @@
+.flash-card-carousel-container{
+    position: relative;
+}
+
+.card-number-status {
+    display: flex;
+    gap: 4px;
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    background: white;
+    z-index: 1000;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }

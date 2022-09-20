@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, LinearProgress } from "@mui/material";
+import { VocabulariesApi } from "../../../api";
 import axios from "axios";
 import "./style.css";
 
@@ -13,6 +14,18 @@ const TranslatePopup = (props) => {
       .then(({ data }) => setMeaning(data.result))
       .catch((error) => console.log(error.errorMessage));
   }, []);
+
+  const handleStoreVocabulary = () => {
+    if (meaning !== "") {
+      {
+        VocabulariesApi("addVocabulary", {
+          text: props.text,
+          meaning: meaning,
+        });
+        props.closeMenu();
+      }
+    }
+  };
   return (
     <>
       <div className="pop-up-translate">
@@ -36,6 +49,7 @@ const TranslatePopup = (props) => {
               background: "white",
             },
           }}
+          onClick={handleStoreVocabulary}
         >
           Lưu
         </Button>

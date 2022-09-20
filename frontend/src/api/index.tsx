@@ -27,8 +27,10 @@ export const BookApi = async (type, bookId = "", payload = {}) => {
 
 export const VocabulariesApi = async (type, payload = {}) => {
   const userId = window.localStorage.getItem("userId");
+  const bookId = window.location.search.split("=").reverse()[0];
   const body = {
     userId: userId,
+    bookId: bookId,
     payload: payload,
   };
   switch (type) {

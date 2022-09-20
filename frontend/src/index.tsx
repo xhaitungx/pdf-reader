@@ -9,14 +9,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import "./index.css";
 const container = document.getElementById("root")!;
 const root = createRoot(container);
-import VocabularyTable from "./components/vocabulary-table";
 root.render(
   <React.StrictMode>
     <Router>
       <CssBaseline />
       <Provider store={store}>
         <PageRoutes />
-        {/* <VocabularyTable /> */}
       </Provider>
     </Router>
   </React.StrictMode>

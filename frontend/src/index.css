@@ -31,7 +31,7 @@ a {
 }
 
 .container {
-  height: calc(100vh - 88px);
+  height: calc(88vh - 88px);
   overflow-y: auto;
   padding-top: 2rem;
 }
