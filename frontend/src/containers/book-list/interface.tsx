@@ -2,7 +2,7 @@ import BookModel from "../../model/Book";
 
 export interface BookListProps {
   books: BookModel[];
-  handleFetchBooks: (payload: BookModel[]) => void;
+  handleFetchBooks: (payload: BookModel[] | null) => void;
 }
 
 export interface BookListStates {

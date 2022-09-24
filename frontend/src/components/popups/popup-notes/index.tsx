@@ -40,8 +40,9 @@ const NotePopup = (props) => {
           onChange={onInputNote}
         />
         <div className="pop-up-note-highlight">
-          {hightlightColor.map((color) => (
+          {hightlightColor.map((color, index) => (
             <div
+              key={index}
               className="highlight-button"
               style={{
                 background: color,

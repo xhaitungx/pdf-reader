@@ -25,6 +25,7 @@ const FlashCardCarousel = ({ vocabularyList }) => {
         {vocabularyList.map((item, i) => (
           <>
             <FlashCard
+              key={i}
               text={item.text}
               meaning={item.meaning}
               currentCard={i + 1}

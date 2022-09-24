@@ -18,10 +18,24 @@ export const BookApi = async (type, bookId = "", payload = {}) => {
       return await Axios.post("/book/books-list", body).then(
         ({ data }) => data
       );
+    case "getDeletedBooksList":
+      return await Axios.post("/book/deleted-books-list", body).then(
+        ({ data }) => data
+      );
     case "getBook":
       return await Axios.post("/book/book-detail", body).then(
         ({ data }) => data
       );
+    case "updateBook":
+      return await Axios.patch("/book", body).then(({ data }) => data);
+    case "restoreBook":
+      return await Axios.patch("/book/restore", body as any).then(
+        ({ data }) => data
+      );
+    case "softDeleteBook":
+      return await Axios.patch("/book", body).then((res) => res);
+    case "hardDeleteBook":
+      return await Axios.patch("/book", body).then(({ data }) => data);
   }
 };
 

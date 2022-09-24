@@ -1,11 +1,11 @@
 import BookModel from "../../model/Book";
 import VocabularyModel from "../../model/Vocabulary";
-export function handleFetchBooks(books: BookModel[]) {
+export function handleFetchBooks(books: BookModel[] | null) {
   return { type: "HANDLE_FETCH_BOOKS", payload: books };
 }
 
-export function handleFetchDeleteBooks(deleteBooks: BookModel[]) {
-  return { type: "HANDLE_FETCH_DELETE_BOOKS", payload: deleteBooks };
+export function handleFetchDeletedBooks(deletedBooks: BookModel[] | null) {
+  return { type: "HANDLE_FETCH_DELETED_BOOKS", payload: deletedBooks };
 }
 
 export function handleFetchNotes(notes: BookModel[]) {

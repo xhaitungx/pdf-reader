@@ -19,7 +19,3 @@
 .vocabulary-body{
     overflow-y: auto;
 }
-
-.MuiDialog-paper{
-  background: transparent !important;
-}

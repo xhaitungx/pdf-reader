@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { handleFetchBooks } from "../../store/actions";
+import { useDispatch } from "react-redux";
 import {
   IconButton,
   Menu,
@@ -9,11 +11,15 @@ import {
   Button,
 } from "@mui/material";
 import { MoreVert, Edit, Delete } from "@mui/icons-material";
+import { BookApi } from "../../api";
 import "./style.css";
 const BookItem = ({ book }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
+  const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+  const [inputValue, setInputValue] = useState(book.name);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -21,15 +27,59 @@ const BookItem = ({ book }) => {
     setAnchorEl(null);
   };
 
-  const handleOpenDialog = () => {};
+  const handleUpdateBook = async (e) => {
+    closeAnchor();
+    const result = BookApi("updateBook", book._id, { name: inputValue });
+    dispatch(handleFetchBooks(null));
+  };
 
-  const renderEditDialog = () => (
-    <Dialog open={isOpenDialog}>
+  const handleDeleteBook = async (e) => {
+    const res = await BookApi("softDeleteBook", book._id);
+    console.log(res);
+    if (res.status === 200) dispatch(handleFetchBooks(null));
+  };
+
+  const renderUpdateDialog = () => (
+    <Dialog
+      open={isOpenUpdateDialog}
+      onClose={(e) => setIsOpenUpdateDialog(false)}
+    >
       <DialogContent>
-        <TextField placeholder="Tên sách" />
+        <TextField
+          placeholder="Tên sách"
+          onChange={(e) => setInputValue(e.target.value)}
+          defaultValue={inputValue}
+        />
         <div className="group-button">
-          <Button onClick={(e) => setIsOpenDialog(false)}>Hủy</Button>
-          <Button variant="contained">Lưu</Button>
+          <Button onClick={(e) => setIsOpenUpdateDialog(false)}>Hủy</Button>
+          <Button variant="contained" onClick={handleUpdateBook}>
+            Lưu
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
+  const renderDeleteConfirmDialog = () => (
+    <Dialog
+      open={isOpenDeleteDialog}
+      onClose={(e) => setIsOpenDeleteDialog(false)}
+    >
+      <DialogContent>
+        <p>
+          Sách sẽ được chuyển vào <b>thùng rác</b>, bạn có chắc chứ?
+        </p>
+        <div className="group-button">
+          <Button
+            onClick={(e) => {
+              setIsOpenDeleteDialog(false);
+            }}
+          >
+            Hủy
+          </Button>
+          <Button variant="contained" color="error" onClick={handleDeleteBook}>
+            Lưu
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -51,13 +101,19 @@ const BookItem = ({ book }) => {
       >
         <MenuItem
           onClick={(e) => {
-            setIsOpenDialog(true);
             closeAnchor();
+            setIsOpenUpdateDialog(true);
           }}
         >
           <Edit /> Chỉnh sửa
         </MenuItem>
-        <MenuItem sx={{ color: "red" }} onClick={closeAnchor}>
+        <MenuItem
+          sx={{ color: "red" }}
+          onClick={(e) => {
+            closeAnchor();
+            setIsOpenDeleteDialog(true);
+          }}
+        >
           <Delete /> Xóa sách
         </MenuItem>
       </Menu>
@@ -72,7 +128,8 @@ const BookItem = ({ book }) => {
           <p>{book.name}</p>
         </a>
       </div>
-      {renderEditDialog()}
+      {renderUpdateDialog()}
+      {renderDeleteConfirmDialog()}
     </>
   );
 };

@@ -1,15 +1,11 @@
 import React from "react";
 import { BookApi } from "../../api";
+import Book from "../../model/Book";
 import BookItem from "../../components/book-item";
 import Loading from "../../components/loading";
 import { BookListProps, BookListStates } from "./interface";
-import {
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Typography, TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import "./style.css";
 class BookList extends React.Component<BookListProps, BookListStates> {
@@ -27,6 +23,18 @@ class BookList extends React.Component<BookListProps, BookListStates> {
     if (!this.props.books) {
       const result = await BookApi("getBooksList");
       console.log(result);
+      console.log("hello");
+      if (result.books.length > 0) {
+        this.props.handleFetchBooks(result.books);
+      } else console.log("rong");
+    }
+  }
+
+  async componentDidUpdate() {
+    if (!this.props.books) {
+      const result = await BookApi("getBooksList");
+      console.log(result);
+      console.log("hello");
       if (result.books.length > 0) {
         this.props.handleFetchBooks(result.books);
       } else console.log("rong");
@@ -52,15 +60,24 @@ class BookList extends React.Component<BookListProps, BookListStates> {
           <Typography variant="h4">BookList</Typography>
           <TextField
             value={this.state.searchInput}
+            variant="standard"
+            sx={{ padding: "0.5rem 1rem", color: "white" }}
             onChange={this.handleInput}
             placeholder="Tìm kiếm sách"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "White" }} />
+                </InputAdornment>
+              ),
+            }}
           />
         </div>
 
         {this.props.books ? (
           <div className="book-list-container container">
-            {this.filterBooks(this.props.books).map((book) => (
-              <BookItem book={book} key={book._id} />
+            {this.filterBooks(this.props.books).map((book: Book) => (
+              <BookItem book={book} key={book.id} />
             ))}
           </div>
         ) : (

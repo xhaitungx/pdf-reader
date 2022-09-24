@@ -6,34 +6,49 @@ const { response } = require("express");
 module.exports = {
   show: async function (req, res) {
     connect();
-    console.log("jere")
     const { userId } = req.body;
-    const books = await User.findById(userId).select('books -_id').populate({
-      path: 'books',
-      select: '-content',
-      match:{
-        softDelete: false
-      }
-  });
+    const books = await User.findById(userId)
+      .select("books -_id")
+      .populate({
+        path: "books",
+        select: "-content",
+        match: {
+          softDelete: false,
+        },
+      });
+    res.status(200).json(books);
+  },
+  showDeleted: async function (req, res) {
+    connect();
+    const { userId } = req.body;
+    const books = await User.findById(userId)
+      .select("books -_id")
+      .populate({
+        path: "books",
+        select: "-content",
+        match: {
+          softDelete: true,
+        },
+      });
     res.status(200).json(books);
   },
   detail: async function (req, res) {
     connect();
-    const {userId, bookId} = req.body;
-    const result = await User.findById(userId).select('books -_id').populate({
-      path:"books",
-      select:"content name",
-      match:
-      {
-        _id: bookId
-      }
-    });
-    if (result)
-      res.status(200).json(result);
+    const { userId, bookId } = req.body;
+    const result = await User.findById(userId)
+      .select("books -_id")
+      .populate({
+        path: "books",
+        select: "content name",
+        match: {
+          _id: bookId,
+        },
+      });
+    if (result) res.status(200).json(result);
   },
   create: async function (req, res) {
     connect();
-    const {userId} = req.body;
+    const { userId } = req.body;
     const books = await BookUtils.isNotRepeat(
       userId,
       req.files.files,
@@ -42,16 +57,15 @@ module.exports = {
     BookUtils.createBook(userId, books, res);
   },
   delete: function (req, res) {
-    connect();   
+    connect();
     const { id } = req.params;
     Book.findByIdAndDelete(id)
-      .then((result) =>
-        {
-          console.log(result);
-          res.status(200).json({
+      .then((result) => {
+        console.log(result);
+        res.status(200).json({
           message: "Xóa sách thành công",
-        })}
-      )
+        });
+      })
       .catch((err) =>
         res.status(404).json({
           message: "Xóa sách thất bại",
@@ -60,11 +74,9 @@ module.exports = {
   },
   hardDelete: function (req, res) {
     connect();
-    const {bookId} = req.body;
+    const { bookId } = req.body;
     Book.findByIdAndDelete(bookId)
-      .then((result) =>
-        res.status(200).json(result)
-      )
+      .then((result) => res.status(200).json(result))
       .catch((err) =>
         res.status(404).json({
           message: "Xóa sách thành công",
@@ -87,11 +99,10 @@ module.exports = {
   },
   update: function (req, res) {
     connect();
-    const {bookId, payload} = req.body;
+    const { bookId, payload } = req.body;
+    console.log(bookId);
     Book.findByIdAndUpdate(bookId, payload)
-      .then((result) =>
-      res.status(200).json(result)
-      )
+      .then((result) => res.status(200).json({Message: "Đã cập nhật thành công"}))
       .catch((err) =>
         res.status(404).json({
           message: "Lỗi hệ thống",
@@ -101,13 +112,31 @@ module.exports = {
   softDelete: function (req, res) {
     connect();
     const { bookId } = req.body;
+    console.log(bookId);
     Book.findByIdAndUpdate(bookId, {
-      softDelete: true
+      softDelete: true,
     })
       .then((result) =>
-      res.status(200).json({
-        message: "Sách đã được chuyển vào thùng rác",
-      })
+        res.status(200).json({
+          message: "Sách đã được chuyển vào thùng rác",
+        })
+      )
+      .catch((err) =>
+        res.status(404).json({
+          message: "Lỗi hệ thống",
+        })
+      );
+  },
+  restore: function (req, res) {
+    connect();
+    const { bookId } = req.body;
+    Book.findByIdAndUpdate(bookId, {
+      softDelete: false,
+    })
+      .then((result) =>
+        res.status(200).json({
+          message: "Sách đã được dời khỏi thùng rác",
+        })
       )
       .catch((err) =>
         res.status(404).json({

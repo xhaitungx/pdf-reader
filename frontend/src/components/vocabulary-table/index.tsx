@@ -42,9 +42,9 @@ const vocabularyTable = ({ listVocabulary }) => {
               </TableRow>
             </TableHead>
             <TableBody className="vocabulary-body" sx={{ width: "100%" }}>
-              {listVocabulary.list.map((row) => (
+              {listVocabulary.list.map((row, index) => (
                 <TableRow
-                  key={row.text}
+                  key={index}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
