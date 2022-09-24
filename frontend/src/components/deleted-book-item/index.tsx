@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleFetchBooks } from "../../store/actions";
+import { handleFetchBooks, handleFetchDeletedBooks } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import {
   IconButton,
@@ -13,7 +13,7 @@ import { BookApi } from "../../api";
 import "./style.css";
 const DeletedBookItem = ({ book }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [enableDelete, setEnableDelete] = useState(false);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -24,17 +24,39 @@ const DeletedBookItem = ({ book }) => {
     setAnchorEl(null);
   };
 
-  const handleUpdateBook = async (e) => {
-    dispatch(handleFetchBooks(null));
+  const handleUndoBook = async (e) => {
+    const res = await BookApi("restoreBook", book._id);
+    if (res.status === 200) {
+      dispatch(handleFetchBooks(null));
+      dispatch(handleFetchDeletedBooks(null));
+    }
   };
 
-  const renderEditDialog = () => (
-    <Dialog open={isOpenDialog} onClose={(e) => setIsOpenDialog(false)}>
+  const handleHardDeleteBook = async (e) => {
+    const res = await BookApi("hardDeleteBook", book._id);
+    if (res.status === 200) {
+      dispatch(handleFetchBooks(null));
+      dispatch(handleFetchDeletedBooks(null));
+    }
+  };
+
+  const renderDeleteConfirmDialog = () => (
+    <Dialog
+      open={isOpenDeleteDialog}
+      onClose={(e) => setIsOpenDeleteDialog(false)}
+    >
       <DialogContent>
+        <p>
+          Sách sẽ bị <b>xóa vĩnh viễn</b>, tiếp tục xóa?
+        </p>
         <div className="group-button">
-          <Button onClick={(e) => setIsOpenDialog(false)}>Hủy</Button>
-          <Button variant="contained" onClick={handleUpdateBook}>
-            Lưu
+          <Button onClick={(e) => setIsOpenDeleteDialog(false)}>Hủy</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleHardDeleteBook}
+          >
+            Xóa
           </Button>
         </div>
       </DialogContent>
@@ -53,14 +75,14 @@ const DeletedBookItem = ({ book }) => {
               size="large"
               color="error"
               sx={{ color: "#ff2d2d" }}
-              onClick={handleClick}
+              onClick={(e) => setIsOpenDeleteDialog(true)}
             >
               <Delete />
             </IconButton>
             <IconButton
               size="large"
               sx={{ color: "#a2ff28" }}
-              onClick={handleClick}
+              onClick={handleUndoBook}
             >
               <Undo />
             </IconButton>
@@ -69,7 +91,7 @@ const DeletedBookItem = ({ book }) => {
         <img src={book.cover} className="book-cover" alt={book.name} />
         <p>{book.name}</p>
       </div>
-      {renderEditDialog()}
+      {renderDeleteConfirmDialog()}
     </>
   );
 };

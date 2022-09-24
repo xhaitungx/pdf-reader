@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { handleFetchBooks } from "../../store/actions";
+import { handleFetchBooks, handleFetchDeletedBooks } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import {
   IconButton,
@@ -36,7 +36,10 @@ const BookItem = ({ book }) => {
   const handleDeleteBook = async (e) => {
     const res = await BookApi("softDeleteBook", book._id);
     console.log(res);
-    if (res.status === 200) dispatch(handleFetchBooks(null));
+    if (res.status === 200) {
+      dispatch(handleFetchBooks(null));
+      dispatch(handleFetchDeletedBooks(null));
+    }
   };
 
   const renderUpdateDialog = () => (
@@ -78,7 +81,7 @@ const BookItem = ({ book }) => {
             Hủy
           </Button>
           <Button variant="contained" color="error" onClick={handleDeleteBook}>
-            Lưu
+            Xóa
           </Button>
         </div>
       </DialogContent>

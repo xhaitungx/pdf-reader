@@ -9,8 +9,8 @@ router.post("/deleted-books-list", BookController.showDeleted);
 router.post("/book-detail", BookController.detail);
 router.patch("/", BookController.update);
 router.patch("/restore", BookController.restore);
-router.delete("/", BookController.softDelete);
-router.delete("/hard-deleting", BookController.hardDelete);
+router.patch("/soft-deleting", BookController.softDelete);
+router.patch("/hard-deleting", BookController.hardDelete);
 router.delete("/delete-all", BookController.deleteAll);
 
 module.exports = router;

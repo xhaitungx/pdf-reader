@@ -22,8 +22,6 @@ class BookList extends React.Component<BookListProps, BookListStates> {
   async componentDidMount() {
     if (!this.props.books) {
       const result = await BookApi("getBooksList");
-      console.log(result);
-      console.log("hello");
       if (result.books.length > 0) {
         this.props.handleFetchBooks(result.books);
       } else console.log("rong");
@@ -33,8 +31,6 @@ class BookList extends React.Component<BookListProps, BookListStates> {
   async componentDidUpdate() {
     if (!this.props.books) {
       const result = await BookApi("getBooksList");
-      console.log(result);
-      console.log("hello");
       if (result.books.length > 0) {
         this.props.handleFetchBooks(result.books);
       } else console.log("rong");
