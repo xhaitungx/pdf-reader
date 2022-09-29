@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema(
     email: String,
     password: String,
     books: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
-    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Note" }],
+    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "NoteList" }],
     vocabularies: [{ type: mongoose.Schema.Types.ObjectId, ref: "VocabularyList" }],
   },
   { timestamps: true }

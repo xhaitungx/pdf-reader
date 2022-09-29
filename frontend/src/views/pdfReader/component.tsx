@@ -1,9 +1,13 @@
 import React from "react";
 import MultiButton from "../../components/multi-button";
 import MenuPopup from "../../components/popups/popup-menu";
+import Loading from "../../components/loading";
 import { ViewerProps, ViewerState } from "./interface";
-import { BookApi } from "../../api";
+import { BookApi, NoteApi } from "../../api";
 import localforage from "localforage";
+import { Notes } from "@mui/icons-material";
+import Note from "../../model/Note";
+import { setTimeout } from "timers";
 
 // import RecentBooks from "../../utils/readUtils/recordRecent";
 // import BookUtil from "../../utils/fileUtils/bookUtil";
@@ -16,14 +20,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
-      href: "",
-      title: "",
-      cfiRange: null,
-      contents: null,
-      rect: null,
-      pageWidth: 0,
-      pageHeight: 0,
-      loading: true,
+      noteList: null,
+      loading: false,
     };
   }
   // UNSAFE_componentWillMount() {
@@ -32,41 +30,102 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   //   this.props.handleFetchBooks();
   // }
   async componentDidMount() {
-    let bookId = window.location.search.split("=").reverse()[0];
-    const result = await BookApi("getBook", bookId);
-    document.title = result.books[0].name;
-    localforage.setItem("bookContent", result.books[0].content.data, () => {
-      if (localforage.getItem("bookContent") !== null)
-        this.setState({
-          loading: false,
-        });
+    const currentBook = await localforage.getItem("currentBook");
+    if (!currentBook) {
+      const bookId = window.location.search.split("=").reverse()[0];
+      const result = await BookApi("getBook", bookId);
+      document.title = result.books[0].name;
+      localforage.setItem("currentBook", {
+        Content: result.books[0].content.data,
+        md5: result.books[0].md5,
+      });
+    }
+    this.setState({
+      loading: false,
     });
-    // console.log(localforage.getItem("bookContent"));
-    // let urls = document.location.href.split("/");
-    // let key = urls[urls.length - 1].split("?")[0];
-    // localforage.getItem("books").then((result: any) => {
-    //   let book;
-    //   if (this.props.currentBook.key) {
-    //     book = this.props.currentBook;
-    //   } else {
-    //     book =
-    //       result[_.findIndex(result, { key })] ||
-    //       JSON.parse(localStorage.getItem("tempBook") || "{}");
-    //   }
-    //   document.title = book.name + " - Koodo Reader";
-    //   this.props.handleReadingState(true);
-    //   RecentBooks.setRecent(key);
-    //   this.props.handleReadingBook(book);
-    //   this.setState({ title: book.name + " - Koodo Reader" });
-    //   this.setState({ href: BookUtil.getPDFUrl(book) });
-    // });
+    if (!this.state.noteList) {
+      const res = await NoteApi("getBookNotes");
+      if (res && res.status === 200) {
+        this.setState({
+          noteList: res.data,
+        });
+      }
+    }
+    setTimeout(() => {
+      this.showPDFHighlight();
+    }, 5000);
   }
+
+  showPDFHighlight = () => {
+    let iWin = this.getPDFIframeDoc();
+    if (!iWin) return;
+    if (this.state.noteList)
+      this.state.noteList.list.map((note) => {
+        const selected = JSON.parse(note.range);
+        var pageIndex = selected.page;
+        if (!iWin.PDFViewerApplication.pdfViewer) return;
+        var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+        if (page && page.div) {
+          console.log("ok");
+          var pageElement = page.div;
+          var viewport = page.viewport;
+          selected.coords.forEach((rect) => {
+            var bounds = viewport.convertToViewportRectangle(rect);
+            var el = iWin.document.createElement("div") as HTMLElement;
+            el.setAttribute("id", "tung");
+            el.setAttribute(
+              "style",
+              "position: absolute;" +
+                "cursor: pointer;" +
+                "opacity: 0.4;" +
+                "background-color:" +
+                note.color +
+                "; left:" +
+                Math.min(bounds[0], bounds[2]) +
+                "px; top:" +
+                Math.min(bounds[1], bounds[3]) +
+                "px;" +
+                "width:" +
+                Math.abs(bounds[0] - bounds[2]) +
+                "px; height:" +
+                Math.abs(bounds[1] - bounds[3]) +
+                "px; z-index:0;"
+            );
+            el.setAttribute("key", "sss");
+            el.setAttribute("class", "pdf-note");
+            el.addEventListener("click", (event: any) => {
+              this.handlePDFClick(event);
+            });
+            pageElement.appendChild(el);
+          });
+        }
+      });
+  };
+
+  getPDFIframeDoc = () => {
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return null;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return null;
+    let iWin: any = iframe.contentWindow;
+    if (!iWin) return null;
+    return iWin;
+  };
+
+  handlePDFClick = (event: any) => {
+    console.log("click note");
+    // this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
+    //   this.showMenu();
+    //   this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
+    //   event.stopPropagation();
+    // });
+  };
 
   render() {
     return (
       <>
         {this.state.loading ? (
-          <div>Loading</div>
+          <Loading />
         ) : (
           <div className="ebook-viewer" id="page-area">
             <MenuPopup />

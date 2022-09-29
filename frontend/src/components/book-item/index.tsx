@@ -13,7 +13,7 @@ import {
 import { MoreVert, Edit, Delete } from "@mui/icons-material";
 import { BookApi } from "../../api";
 import "./style.css";
-const BookItem = ({ book }) => {
+const BookItem = ({ book, openSnackBar }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
@@ -39,6 +39,7 @@ const BookItem = ({ book }) => {
     if (res.status === 200) {
       dispatch(handleFetchBooks(null));
       dispatch(handleFetchDeletedBooks(null));
+      openSnackBar("success");
     }
   };
 

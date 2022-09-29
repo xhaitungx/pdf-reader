@@ -6,5 +6,6 @@ export interface DeletedBookListProps {
 }
 
 export interface DeletedBookListStates {
-  isLoading: boolean;
+  alertType: string;
+  openSnackbar: boolean;
 }

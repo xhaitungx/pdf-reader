@@ -7,6 +7,7 @@ export interface BookListProps {
 
 export interface BookListStates {
   searchInput: string;
-  isLoading: boolean;
   bookListMenu: boolean;
+  alertType: string;
+  openSnackbar: boolean;
 }

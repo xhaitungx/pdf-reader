@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import localforage from "localforage";
 import { Button } from "@mui/material";
 import "./style.css";
+import Note from "../../../model/Note";
+import { NoteApi } from "../../../api";
 const NotePopup = (props) => {
   const [note, setNote] = useState({
     content: "",
@@ -22,13 +25,89 @@ const NotePopup = (props) => {
     "#d4ddda",
   ];
 
-  const onInputNote = (e) => {
-    setNote({ ...note, content: e.target.value });
+  const getPDFLocation = (fingerprint: string) => {
+    let json = localStorage.getItem("pdfjs.history");
+    let arr = JSON.parse(json || "{}").files || [];
+    return JSON.stringify(
+      arr[arr.map((el) => el.fingerprint).lastIndexOf(fingerprint)] || {}
+    );
   };
 
-  const onSubmit = () => {
-    console.log(note.content);
-    setNote({ ...note, content: "" });
+  const getHightlightCoords = () => {
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let iWin: any = iframe.contentWindow;
+    var pageIndex = iWin!.PDFViewerApplication.pdfViewer.currentPageNumber - 1;
+    var page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+    var pageRect = page.canvas.getClientRects()[0];
+    var selectionRects = iWin.getSelection()!.getRangeAt(0).getClientRects();
+    var viewport = page.viewport;
+    let tempRect: {
+      bottom: number;
+      top: number;
+      left: number;
+      right: number;
+    }[] = [];
+    for (let i = 0; i < selectionRects.length; i++) {
+      if (i === 0) {
+        tempRect.push({
+          bottom: selectionRects[i].bottom,
+          top: selectionRects[i].top,
+          left: selectionRects[i].left,
+          right: selectionRects[i].right,
+        });
+      } else if (
+        Math.abs(
+          tempRect[tempRect.length - 1].bottom - selectionRects[i].bottom
+        ) < 5
+      ) {
+        if (tempRect[tempRect.length - 1].left > selectionRects[i].left) {
+          tempRect[tempRect.length - 1].left = selectionRects[i].left;
+        }
+        if (tempRect[tempRect.length - 1].right < selectionRects[i].right) {
+          tempRect[tempRect.length - 1].right = selectionRects[i].right;
+        }
+      } else {
+        tempRect.push({
+          bottom: selectionRects[i].bottom,
+          top: selectionRects[i].top,
+          left: selectionRects[i].left,
+          right: selectionRects[i].right,
+        });
+      }
+    }
+    var selected = tempRect.map(function (r: any) {
+      return viewport
+        .convertToPdfPoint(r.left - pageRect.x, r.top - pageRect.y)
+        .concat(
+          viewport.convertToPdfPoint(
+            r.right - pageRect.x,
+            r.bottom - pageRect.y
+          )
+        );
+    });
+    return JSON.stringify({ page: pageIndex, coords: selected });
+  };
+
+  const onSubmit = async () => {
+    const currentBook: any = await localforage.getItem("currentBook");
+    let cfi = await getPDFLocation(currentBook.md5);
+    let range = await getHightlightCoords();
+    const notes = {
+      note: note.content,
+      text: props.text,
+      color: note.color,
+      cfi,
+      range,
+    };
+
+    const res = await NoteApi("addNote", { notes });
+  };
+
+  const onInputNote = (e) => {
+    setNote({ ...note, content: e.target.value });
   };
 
   return (
@@ -59,7 +138,6 @@ const NotePopup = (props) => {
         </Button>
         <Button
           variant="contained"
-          onClick={onSubmit}
           sx={{
             color: "black",
             background: "white",
@@ -67,6 +145,7 @@ const NotePopup = (props) => {
               background: "white",
             },
           }}
+          onClick={onSubmit}
         >
           Lưu
         </Button>

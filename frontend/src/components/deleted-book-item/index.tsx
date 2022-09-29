@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { handleFetchBooks, handleFetchDeletedBooks } from "../../store/actions";
 import { useDispatch } from "react-redux";
-import {
-  IconButton,
-  Dialog,
-  DialogContent,
-  TextField,
-  Button,
-} from "@mui/material";
+import { IconButton, Dialog, DialogContent, Button } from "@mui/material";
 import { Undo, Delete } from "@mui/icons-material";
 import { BookApi } from "../../api";
 import "./style.css";
-const DeletedBookItem = ({ book }) => {
+const DeletedBookItem = ({ book, openSnackBar }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [enableDelete, setEnableDelete] = useState(false);
+
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,6 +24,7 @@ const DeletedBookItem = ({ book }) => {
     if (res.status === 200) {
       dispatch(handleFetchBooks(null));
       dispatch(handleFetchDeletedBooks(null));
+      openSnackBar("success");
     }
   };
 

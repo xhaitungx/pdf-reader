@@ -15,12 +15,10 @@ export const BookApi = async (type, bookId = "", payload = {}) => {
     case "addBooks":
       return await Axios.post("/book", body).then(({ data }) => data);
     case "getBooksList":
-      return await Axios.post("/book/books-list", body).then(
-        ({ data }) => data
-      );
+      return await Axios.post("/book/books-list", body).then((res) => res);
     case "getDeletedBooksList":
       return await Axios.post("/book/deleted-books-list", body).then(
-        ({ data }) => data
+        (res) => res
       );
     case "getBook":
       return await Axios.post("/book/book-detail", body).then(
@@ -55,13 +53,30 @@ export const VocabulariesApi = async (type, payload = {}) => {
   }
 };
 
+export const NoteApi = async (type, payload = {}) => {
+  const userId = window.localStorage.getItem("userId");
+  const bookId = window.location.search.split("=").reverse()[0];
+  const body = {
+    userId: userId,
+    bookId: bookId,
+    payload: payload,
+  };
+  switch (type) {
+    case "addNote":
+      return await Axios.post("/note", body).then((res) => res);
+    case "getBookNotes":
+      return await Axios.post("/note/book-notes", body).then((res) => res);
+    case "getNotes":
+      return await Axios.post("/note/notes-list", body).then((res) => res);
+  }
+};
+
 export const UserApi = async (type, payload) => {
   const userId = window.localStorage.getItem("userId");
   const body = {
     userId: userId,
     payload: payload,
   };
-  console.log(userId);
   switch (type) {
     case "register":
       return await Axios.post("/user/register", body).then(({ data }) => data);

@@ -4,14 +4,8 @@ import { BookApi } from "../../api";
 import DeletedBookItem from "../../components/deleted-book-item";
 import Loading from "../../components/loading";
 import { DeletedBookListProps, DeletedBookListStates } from "./interface";
-import {
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  TextField,
-  InputAdornment,
-} from "@mui/material";
+import SnackBar from "../../components/snack-bar";
+import { Typography } from "@mui/material";
 import "./style.css";
 class DeletedBookList extends React.Component<
   DeletedBookListProps,
@@ -20,27 +14,40 @@ class DeletedBookList extends React.Component<
   constructor(props: DeletedBookListProps) {
     super(props);
     this.state = {
-      isLoading: false,
+      alertType: "",
+      openSnackbar: false,
     };
+    this.setAlertType = this.setAlertType.bind(this);
+    this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
   }
 
+  setAlertType = (type: string) => {
+    this.setState({
+      alertType: type,
+      openSnackbar: true,
+    });
+  };
+
+  handleCloseSnackbar = (type: string) => {
+    this.setState({
+      openSnackbar: false,
+    });
+  };
+
   async componentDidMount() {
-    console.log(this.props.deletedBooks);
     if (!this.props.deletedBooks) {
-      const result = await BookApi("getDeletedBooksList");
-      if (result.books.length > 0) {
-        this.props.handleFetchDeletedBooks(result.books);
-      } else console.log("rong");
+      const res = await BookApi("getDeletedBooksList");
+      if (res.status === 200)
+        this.props.handleFetchDeletedBooks(res.data.books);
     }
   }
 
   async componentDidUpdate() {
-    console.log(this.props.deletedBooks);
     if (!this.props.deletedBooks) {
-      const result = await BookApi("getDeletedBooksList");
-      if (result.books.length > 0) {
-        this.props.handleFetchDeletedBooks(result.books);
-      } else console.log("rong");
+      const res = await BookApi("getDeletedBooksList");
+      if (res.status === 200) {
+        this.props.handleFetchDeletedBooks(res.data.books);
+      }
     }
   }
 
@@ -50,16 +57,29 @@ class DeletedBookList extends React.Component<
         <div className="deleted-book-list-heading" style={{ color: "white" }}>
           <Typography variant="h4">Thùng rác</Typography>
         </div>
-
-        {this.props.deletedBooks ? (
+        {this.props.deletedBooks === null ? (
+          <Loading />
+        ) : this.props.deletedBooks.length > 0 ? (
           <div className="book-list-container container">
             {this.props.deletedBooks.map((book: Book) => (
-              <DeletedBookItem book={book} key={book.id} />
+              <DeletedBookItem
+                book={book}
+                openSnackBar={this.setAlertType}
+                key={book.id}
+              />
             ))}
           </div>
         ) : (
-          <Loading />
+          <div>
+            <h1>Hiện tại chưa có sách nào được xóa.</h1>
+          </div>
         )}
+        <SnackBar
+          open={this.state.openSnackbar}
+          handleClose={this.handleCloseSnackbar}
+          type={this.state.alertType}
+          message="Sách đã được phục hồi"
+        />
       </>
     );
   }

@@ -4,36 +4,52 @@ import Book from "../../model/Book";
 import BookItem from "../../components/book-item";
 import Loading from "../../components/loading";
 import { BookListProps, BookListStates } from "./interface";
+import SnackBar from "../../components/snack-bar";
 import { Typography, TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import "./style.css";
 class BookList extends React.Component<BookListProps, BookListStates> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
       searchInput: "",
-      isLoading: false,
       bookListMenu: false,
+      alertType: "",
+      openSnackbar: false,
     };
     this.handleInput = this.handleInput.bind(this);
+    this.setAlertType = this.setAlertType.bind(this);
+    this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
   }
+
+  setAlertType = (type: string) => {
+    this.setState({
+      alertType: type,
+      openSnackbar: true,
+    });
+  };
+
+  handleCloseSnackbar = (type: string) => {
+    this.setState({
+      openSnackbar: false,
+    });
+  };
 
   async componentDidMount() {
     if (!this.props.books) {
-      const result = await BookApi("getBooksList");
-      if (result.books.length > 0) {
-        this.props.handleFetchBooks(result.books);
-      } else console.log("rong");
+      const res = await BookApi("getBooksList");
+      if (res.status === 200) {
+        this.props.handleFetchBooks(res.data.books);
+      }
     }
   }
 
   async componentDidUpdate() {
     if (!this.props.books) {
-      const result = await BookApi("getBooksList");
-      if (result.books.length > 0) {
-        this.props.handleFetchBooks(result.books);
-      } else console.log("rong");
+      const res = await BookApi("getBooksList");
+      if (res.status === 200) {
+        this.props.handleFetchBooks(res.data.books);
+      }
     }
   }
 
@@ -69,16 +85,27 @@ class BookList extends React.Component<BookListProps, BookListStates> {
             }}
           />
         </div>
-
-        {this.props.books ? (
+        {this.props.books === null ? (
+          <Loading />
+        ) : this.props.books.length > 0 ? (
           <div className="book-list-container container">
             {this.filterBooks(this.props.books).map((book: Book) => (
-              <BookItem book={book} key={book.id} />
+              <BookItem
+                book={book}
+                openSnackBar={this.setAlertType}
+                key={book.id}
+              />
             ))}
           </div>
         ) : (
-          <Loading />
+          <div>sdsds</div>
         )}
+        <SnackBar
+          open={this.state.openSnackbar}
+          handleClose={this.handleCloseSnackbar}
+          type={this.state.alertType}
+          message="Sách đã được chuyển vào thùng rác"
+        />
       </>
     );
   }

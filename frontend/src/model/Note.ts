@@ -1,37 +1,28 @@
 class Note {
   id: string;
-  bookID: string;
-  chapter: string;
-  chapterIndex: number;
-  text: string;
-  cfi: string;
-  range: string;
-  notes: string;
-  color: number;
-  tag: string[];
+  bookId: string;
+  bookName: string;
+  list: INote[];
   constructor(
     id: string,
-    bookID: string,
-    chapter: string,
-    chapterIndex: number,
-    text: string,
-    cfi: string,
-    range: string,
-    notes: string,
-    color: number,
-    tag: string[]
+    bookId: string,
+    bookName: string,
+    list: INote[]
   ) {
     this.id = id;
-    this.bookID = bookID;
-    this.chapter = chapter;
-    this.chapterIndex = chapterIndex;
-    this.text = text;
-    this.cfi = cfi;
-    this.range = range;
-    this.notes = notes || "";
-    this.color = color;
-    this.tag = tag;
+    this.bookId = bookId;
+    this.bookName = bookName;
+    this.list = list;
+  }
 }
+
+interface INote {
+  id: string;
+  text: string;
+  note: string;
+  color: string;
+  cfi: string;
+  range: string;
 }
 
 export default Note;

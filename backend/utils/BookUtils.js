@@ -2,7 +2,9 @@ const pdfjsLib = require("pdfjs-dist/legacy/build/pdf");
 const Book = require("../models/BookModel");
 const User = require("../models/UserModel");
 const VocabularyList = require("../models/VocabularyListModel");
+const NoteList = require("../models/NoteListModel");
 const { createCanvas } = require("canvas");
+
 module.exports = {
   isNotRepeat: async function (userId, files, length) {
     let arrayFiles = [];
@@ -46,12 +48,20 @@ module.exports = {
           bookName: book.name
         }).then((result) => result._id)
       );
-      // const promiseValue = await Promise.all(vocabularyListId);
-      const promiseResponse = await Promise.all(vocabularyListId);
+      const noteListId = result.map( async (book) =>
+        await NoteList.create({
+          bookId: book._id,
+          bookName: book.name
+        }).then((result) => result._id)
+      );
+
+      const vocabularyListIdResponse = await Promise.all(vocabularyListId);
+      const noteListIdResponse = await Promise.all(noteListId);
       User.findByIdAndUpdate(userId, {
         $push: {
           books: booksId,
-          vocabularies: promiseResponse,
+          notes: noteListIdResponse,
+          vocabularies: vocabularyListIdResponse,
         },
       }).then((result) => console.log(result));
       res.status(200).json({

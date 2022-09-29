@@ -39,7 +39,7 @@ module.exports = {
       .select("books -_id")
       .populate({
         path: "books",
-        select: "content name",
+        select: "content name md5",
         match: {
           _id: bookId,
         },

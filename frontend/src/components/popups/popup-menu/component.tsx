@@ -132,6 +132,7 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
               )}
               {this.props.readMode === 2 && (
                 <NotePopup
+                  text={this.state.text}
                   rect={this.state.noteRect}
                   closeMenu={this.closePopupMenu}
                 />

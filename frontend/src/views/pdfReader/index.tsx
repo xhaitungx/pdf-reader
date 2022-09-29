@@ -1,12 +1,5 @@
 import { connect } from "react-redux";
-// import {
-//   handleActionDialog,
-//   handleReadingState,
-//   handleReadingBook,
-//   handleFetchNotes,
-//   handleFetchBookmarks,
-//   handleFetchBooks,
-// } from "../../store/actions";
+import { handleFetchNotes } from "../../store/actions";
 import PDFReader from "./component";
 // import { stateType } from "../../store";
 

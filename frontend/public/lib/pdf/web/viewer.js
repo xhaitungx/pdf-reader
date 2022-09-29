@@ -3145,18 +3145,20 @@
       let webViewerOpenFileViaURL;
       {
         webViewerOpenFileViaURL = async function (file) {
-          const bookContent = await localforage.getItem("bookContent");
-          // let params = new URL(document.location).searchParams;
-          // let bookID = params.get("id");
-          // let url = `http://localhost:5004/book/${bookID}`;
-          // const response = await fetch(url, {
-          //   method: "get",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          // });
-          // let book = await response.json().then((data) => data);
-          PDFViewerApplication.open(new Uint8Array(bookContent).buffer);
+          const currentBook = await localforage.getItem("currentBook");
+          const cfi = await localforage.getItem("testCfi");
+            if(cfi !== null){
+              console.log("cfi note is working");
+              console.log(console.log(cfi));
+              let json = localStorage.getItem("pdfjs.history");
+              let libHistory = JSON.parse(json || "{}");
+              console.log(libHistory);
+              libHistory.files[libHistory.files.findIndex(item => item.fingerprint === currentBook.md5)] = cfi;
+              console.log(libHistory);
+              localStorage.setItem("pdfjs.history", JSON.stringify(libHistory));
+            }
+
+          PDFViewerApplication.open(new Uint8Array(currentBook.Content).buffer);
           // if (window.require) {
           //   var fs = window.require("fs");
           //   var path = window.require("path");
@@ -14787,7 +14789,8 @@
           this.fingerprint = fingerprint;
           this.cacheSize = cacheSize;
           this._initializedPromise = this._readFromStorage().then(
-            (databaseStr) => {
+            async (databaseStr) => {
+              const currentBook = await localforage.getItem("currentBook");
               const database = JSON.parse(databaseStr || "{}");
               let index = -1;
 
@@ -14801,7 +14804,7 @@
                 for (let i = 0, ii = database.files.length; i < ii; i++) {
                   const branch = database.files[i];
 
-                  if (branch.fingerprint === this.fingerprint) {
+                  if (branch.fingerprint === currentBook.md5) {
                     index = i;
                     break;
                   }
@@ -14811,7 +14814,7 @@
               if (index === -1) {
                 index =
                   database.files.push({
-                    fingerprint: this.fingerprint,
+                    fingerprint: currentBook.md5,
                   }) - 1;
               }
 
