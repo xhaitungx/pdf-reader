@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { handleFetchBookNotes } from "../../../store/actions";
 import localforage from "localforage";
 import { Button } from "@mui/material";
 import "./style.css";
-import Note from "../../../model/Note";
 import { NoteApi } from "../../../api";
 const NotePopup = (props) => {
   const [note, setNote] = useState({
     content: "",
     color: "#ffc701",
   });
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const textField = document.querySelector(
@@ -102,8 +105,11 @@ const NotePopup = (props) => {
       cfi,
       range,
     };
-
     const res = await NoteApi("addNote", { notes });
+    if (res && res.status === 200) {
+      console.log("add");
+      dispatch(handleFetchBookNotes(null));
+    }
   };
 
   const onInputNote = (e) => {

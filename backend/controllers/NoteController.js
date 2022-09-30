@@ -23,7 +23,9 @@ module.exports = {
           list: payload.notes,
         },
       }
-    ).then((result) => console.log(result));
+    ).then((result) => res.status(200).json({
+      message:"Add thành công"
+    }));
   },
   detail: function (req, res) {
     connect();

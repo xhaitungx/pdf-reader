@@ -1,5 +1,6 @@
 const initState = {
   selection: null,
+  bookNotes: null,
   isChangeDirection: false,
   isShowBookmark: false,
   readMode: 0,
@@ -13,6 +14,11 @@ export function viewArea(
       return {
         ...state,
         isOpenHighlight: action.payload,
+      };
+    case "HANDLE_FETCH_BOOK_NOTES":
+      return {
+        ...state,
+        bookNotes: action.payload,
       };
 
     case "HANDLE_SHOW_BOOKMARK":

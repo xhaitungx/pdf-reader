@@ -1,21 +1,14 @@
 import { connect } from "react-redux";
-import { handleFetchNotes } from "../../store/actions";
+import { handleFetchBookNotes } from "../../store/actions";
 import PDFReader from "./component";
-// import { stateType } from "../../store";
+import { stateType } from "../../store";
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: stateType) => {
   return {
-    isOpenActionDialog: state.book.isOpenActionDialog,
-    currentBook: state.book.currentBook,
-    isReading: state.book.isReading,
+    bookNotes: state.viewArea.bookNotes,
   };
 };
 const actionCreator = {
-  // handleReadingState,
-  // handleReadingBook,
-  // handleActionDialog,
-  // handleFetchNotes,
-  // handleFetchBookmarks,
-  // handleFetchBooks,
+  handleFetchBookNotes,
 };
-export default PDFReader;
+export default connect(mapStateToProps, actionCreator)(PDFReader);

@@ -45,5 +45,6 @@ export type stateType = {
     isChangeDirection: boolean;
     isShowBookmark: boolean;
     readMode: number;
+    bookNotes: NoteModel | null;
   };
 };

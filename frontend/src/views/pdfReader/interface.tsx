@@ -1,9 +1,13 @@
 // import BookModel from "../../model/Book";
-import Note from "../../model/Note";
+import NoteModel from "../../model/Note";
 export interface ViewerProps {
-  handleFetchNotes: (payload) => void;
+  bookNotes: NoteModel | null;
+  handleFetchBookNotes: (payload: NoteModel | null) => void;
 }
 export interface ViewerState {
+  noteText: string;
+  isOpenNote: boolean;
   loading: boolean;
-  noteList: Note | null;
+  pageX: number;
+  pageY: number;
 }

@@ -1,83 +1,76 @@
 import React from "react";
 import MultiButton from "../../components/multi-button";
 import MenuPopup from "../../components/popups/popup-menu";
+import NotePopup from "../../components/popups/popup-notes";
 import Loading from "../../components/loading";
 import { ViewerProps, ViewerState } from "./interface";
 import { BookApi, NoteApi } from "../../api";
 import localforage from "localforage";
-import { Notes } from "@mui/icons-material";
-import Note from "../../model/Note";
 import { setTimeout } from "timers";
-
-// import RecentBooks from "../../utils/readUtils/recordRecent";
-// import BookUtil from "../../utils/fileUtils/bookUtil";
-// import BackToMain from "../../components/backToMain";
-// import PopupMenu from "../../components/popups/popupMenu";
-// import { Toaster } from "react-hot-toast";
-// import { handleLinkJump } from "../../utils/readUtils/linkUtil";
-// import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
+import "./style.css";
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
-      noteList: null,
+      noteText: "",
+      isOpenNote: false,
       loading: false,
+      pageX: 0,
+      pageY: 0,
     };
   }
-  // UNSAFE_componentWillMount() {
-  //   this.props.handleFetchBookmarks();
-  //   this.props.handleFetchNotes();
-  //   this.props.handleFetchBooks();
-  // }
+
   async componentDidMount() {
     const currentBook = await localforage.getItem("currentBook");
-    if (!currentBook) {
-      const bookId = window.location.search.split("=").reverse()[0];
-      const result = await BookApi("getBook", bookId);
-      document.title = result.books[0].name;
-      localforage.setItem("currentBook", {
-        Content: result.books[0].content.data,
-        md5: result.books[0].md5,
-      });
-    }
+    const bookId = window.location.search.split("=").reverse()[0];
+    const result = await BookApi("getBook", bookId);
+    document.title = result.books[0].name;
+    localforage.setItem("currentBook", {
+      Content: result.books[0].content.data,
+      md5: result.books[0].md5,
+    });
     this.setState({
       loading: false,
     });
-    if (!this.state.noteList) {
+  }
+  async componentDidUpdate() {
+    if (!this.props.bookNotes) {
+      console.log("how many");
       const res = await NoteApi("getBookNotes");
       if (res && res.status === 200) {
-        this.setState({
-          noteList: res.data,
-        });
+        this.props.handleFetchBookNotes(res.data);
+        const noteEl = document.querySelectorAll(".note");
+        console.log(noteEl);
+        noteEl.forEach((el) => el.remove());
+        setTimeout(() => {
+          this.showPDFHighlight();
+        }, 1000);
       }
     }
-    setTimeout(() => {
-      this.showPDFHighlight();
-    }, 5000);
   }
 
   showPDFHighlight = () => {
     let iWin = this.getPDFIframeDoc();
     if (!iWin) return;
-    if (this.state.noteList)
-      this.state.noteList.list.map((note) => {
+    if (this.props.bookNotes)
+      this.props.bookNotes.list.map((note) => {
         const selected = JSON.parse(note.range);
         var pageIndex = selected.page;
         if (!iWin.PDFViewerApplication.pdfViewer) return;
         var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
         if (page && page.div) {
-          console.log("ok");
           var pageElement = page.div;
           var viewport = page.viewport;
           selected.coords.forEach((rect) => {
             var bounds = viewport.convertToViewportRectangle(rect);
             var el = iWin.document.createElement("div") as HTMLElement;
-            el.setAttribute("id", "tung");
+            el.setAttribute("id", note._id);
+            el.setAttribute("class", "note");
             el.setAttribute(
               "style",
               "position: absolute;" +
                 "cursor: pointer;" +
-                "opacity: 0.4;" +
+                "opacity: 0.2;" +
                 "background-color:" +
                 note.color +
                 "; left:" +
@@ -91,8 +84,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 Math.abs(bounds[1] - bounds[3]) +
                 "px; z-index:0;"
             );
-            el.setAttribute("key", "sss");
-            el.setAttribute("class", "pdf-note");
             el.addEventListener("click", (event: any) => {
               this.handlePDFClick(event);
             });
@@ -112,8 +103,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     return iWin;
   };
 
-  handlePDFClick = (event: any) => {
-    console.log("click note");
+  handlePDFClick = (e: any) => {
+    if (this.props.bookNotes) {
+      let noteId = e.currentTarget.getAttribute("id");
+      let clickedNote = this.props.bookNotes.list.find(
+        (note) => note._id === noteId
+      );
+      if (!clickedNote) return;
+      console.log(clickedNote);
+      this.setState({
+        isOpenNote: true,
+        noteText: clickedNote.note,
+        pageX: e.clientX,
+        pageY: e.clientY,
+      });
+    }
     // this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
     //   this.showMenu();
     //   this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
@@ -128,24 +132,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           <Loading />
         ) : (
           <div className="ebook-viewer" id="page-area">
-            <MenuPopup />
+            {this.state.isOpenNote ? (
+              <div
+                style={{
+                  position: "fixed",
+                  top: this.state.pageY + "px",
+                  left: this.state.pageX + "px",
+                  transform: "translate(-125px, -62px)",
+                }}
+                // onMouseLeave={(e) =>
+                //   this.setState({
+                //     isOpenNote: false,
+                //   })
+                // }
+              >
+                <textarea value={this.state.noteText} />
+              </div>
+            ) : (
+              <MenuPopup />
+            )}
             <MultiButton />
-            {/* {!this.state.loading && (
-          <PopupMenu
-            {...{
-              rendition: {
-                on: (status: string, callback: any) => {
-                  callback();
-                },
-              },
-              rect: this.state.rect,
-              pageWidth: this.state.pageWidth,
-              pageHeight: this.state.pageHeight,
-              chapterIndex: 0,
-              chapter: "0",
-            }}
-          />
-        )} */}
             <iframe
               src={`./lib/pdf/web/viewer.html${window.location.search}`}
               title="hello"

@@ -17,7 +17,7 @@ class Note {
 }
 
 interface INote {
-  id: string;
+  _id: string;
   text: string;
   note: string;
   color: string;

@@ -1,6 +1,13 @@
+import NoteModel from "../../model/Note";
+
 export function handleChangeReadMode(readMode: number) {
   return { type: "HANDLE_CHANGE_READ_MODE", payload: readMode };
 }
+
+export function handleFetchBookNotes(bookNotes: NoteModel | null) {
+  return { type: "HANDLE_FETCH_BOOK_NOTES", payload: bookNotes };
+}
+
 export function handleOpenMenu(isOpenMenu: boolean) {
   return { type: "HANDLE_OPEN_MENU", payload: isOpenMenu };
 }

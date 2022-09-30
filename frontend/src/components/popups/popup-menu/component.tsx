@@ -3,7 +3,6 @@ import { MenuPopupProps, MenuPopupStates } from "./interface";
 import NotePopup from "../popup-notes";
 import TranslatePopup from "../popup-translate";
 import "./style.css";
-import { transform } from "typescript";
 
 class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
   constructor(props: MenuPopupProps) {
