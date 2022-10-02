@@ -1,46 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Weather App</title>
-        <style type="text/css">
-            html {
-                height: 100%;
-            }
-            body {
-                height: 100%;
-                margin: 0;
-                background: #0a1f44;
-                display: flex;
-                align-items: center;
-                text-align: center;
-                justify-content: center;
-            }
-        
-            .city {
-                align-items: center;
-                width: 80%;
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                padding: 40px 8%;
-                border-radius: 20px;
-                background: #fff;
-            }
+{
+	"quotes": [
 
-            .city-name {
-                font-size: 2em;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="city">
-            <h2 id="quote">
-            </h2>
-        </div>
-        <script type="text/javascript">
-            const quotes = [
 {
        "quote":"Life isn’t about getting and having, it’s about giving and being.","author":"Kevin Kruse"},
 {
@@ -246,13 +206,4 @@
 {
        "quote":"If you can dream it, you can achieve it.","author":"Zig Ziglar"}
 ]
-            var randomQuotes = quotes[Math.floor(Math.random()*quotes.length)];
-            console.log(randomQuotes);
-            let quoteEl = document.getElementById("quote");
-            let spanQuote = document.createElement("span");
-            let spanAuthor = document.createElement("span");
-            quoteEl.append(randomQuotes.quote,spanQuote)
-            quoteEl.append(randomQuotes.author,spanAuthor)
-        </script>
-    </body>
-</html>
+}
