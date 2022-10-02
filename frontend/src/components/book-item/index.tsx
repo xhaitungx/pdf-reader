@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Link} from "react-router-dom";
 import { handleFetchBooks, handleFetchDeletedBooks } from "../../store/actions";
 import { useDispatch } from "react-redux";
 import {
@@ -127,10 +128,10 @@ const BookItem = ({ book, openSnackBar }) => {
     <>
       <div className="book-item">
         {renderMenuButton()}
-        <a href={`/pdf-reader?bookId=${book._id}`} target="_blank">
+        <Link to={`/pdf-reader?bookId=${book._id}`}>
           <img src={book.cover} className="book-cover" alt={book.name} />
           <p>{book.name}</p>
-        </a>
+        </Link>
       </div>
       {renderUpdateDialog()}
       {renderDeleteConfirmDialog()}
