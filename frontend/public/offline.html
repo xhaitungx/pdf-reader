@@ -11,33 +11,42 @@
             body {
                 height: 100%;
                 margin: 0;
-                background: #0a1f44;
+                background: #4ca9e2;
                 display: flex;
                 align-items: center;
                 text-align: center;
                 justify-content: center;
             }
-        
-            .city {
-                align-items: center;
-                width: 80%;
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                padding: 40px 8%;
-                border-radius: 20px;
-                background: #fff;
+
+            #quote-box{
+              width: 80vw;
+              text-align: center;
+              background: #ffe6b7;
+              border-radius: 8px;
+              cursor: pointer;
+              position: absolute;
+              display: flex;
+              flex-direction: column;
+              padding: 2rem;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
             }
 
-            .city-name {
-                font-size: 2em;
+            #quote-content{
+              font-size: 36px;
+            }
+
+            #author{
+              margin-top: 1rem;
+              font-size: 20px;
             }
         </style>
     </head>
     <body>
-        <div class="city">
-            <h2 id="quote">
-            </h2>
+            <div id="quote-box">
+              <span id="quote-content"></span>
+              <span id="author"></span>
         </div>
         <script type="text/javascript">
             const quotes = [
@@ -246,13 +255,18 @@
 {
        "quote":"If you can dream it, you can achieve it.","author":"Zig Ziglar"}
 ]
-            var randomQuotes = quotes[Math.floor(Math.random()*quotes.length)];
-            console.log(randomQuotes);
-            let quoteEl = document.getElementById("quote");
-            let spanQuote = document.createElement("span");
-            let spanAuthor = document.createElement("span");
-            quoteEl.append(randomQuotes.quote,spanQuote)
-            quoteEl.append(randomQuotes.author,spanAuthor)
+            function getRandomQuote(){
+              console.log("click");
+              let randomQuotes = quotes[Math.floor(Math.random()*quotes.length)];
+              console.log(randomQuotes);
+              let quoteContent = document.getElementById("quote-content");
+              let author = document.getElementById("author");
+              quoteContent.innerHTML = `" ${randomQuotes.quote} "`;
+              author.innerHTML = `- ${randomQuotes.author} -`;
+            }
+            getRandomQuote();
+            let containerEl = document.getElementById("container");
+            containerEl.addEventListener("click", getRandomQuote);
         </script>
     </body>
 </html>
