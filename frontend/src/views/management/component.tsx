@@ -2,6 +2,7 @@ import React from "react";
 import { ManagementProps, ManagementStates } from "./interface";
 import Header from "../../containers/header";
 import SideBar from "../../containers/side-bar";
+import FooterBar from "../../containers/footer-bar";
 import ComponentRoutes from "../../router/ComponentRoutes";
 import { styled, useTheme } from "@mui/material/styles";
 import { Box } from "@mui/material";
@@ -17,8 +18,9 @@ class Management extends React.Component<ManagementProps, ManagementStates> {
   }));
   render() {
     return (
-      <div id="pd-management">
-        <Box sx={{ display: "flex" }}>
+      <>
+      <div id="pd-management" style={{height:"calc(100vh - 56px)"}}>
+        <Box sx={{display:"flex"}}>
           <SideBar />
           <Header />
           <Box
@@ -37,6 +39,8 @@ class Management extends React.Component<ManagementProps, ManagementStates> {
           </Box>
         </Box>
       </div>
+      <FooterBar/>
+      </>
     );
   }
 }

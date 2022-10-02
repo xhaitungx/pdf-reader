@@ -1,3 +1,7 @@
+#pd-management{
+  position: relative;
+}
+
 #pd-header,
 #pd-sidebar {
   background-color: var(--blue-darkest);
@@ -75,4 +79,13 @@
 
 .MuiListItemButton-root .MuiTypography-root {
   color: white !important;
+}
+
+@media only screen and (max-width: 720px) {
+  .MuiDrawer-root{
+    display: none !important;
+  }
+  .MuiDrawer-root{
+    display: none !important;
+  }
 }

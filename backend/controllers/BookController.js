@@ -7,7 +7,7 @@ module.exports = {
   show: async function (req, res) {
     connect();
     const { userId } = req.body;
-    const books = await User.findById(userId)
+    const books = await User.findById(userId) 
       .select("books -_id")
       .populate({
         path: "books",
