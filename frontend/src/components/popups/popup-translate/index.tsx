@@ -5,15 +5,19 @@ import axios from "axios";
 import "./style.css";
 
 const TranslatePopup = (props) => {
-  const [meaning, setMeaning] = useState("");
+  const [meaning, setMeaning] = useState(null);
   useEffect(() => {
+    console.log(meaning);
+    if (meaning !== null) {
+      handleSpeak(props.text);
+    }
     axios
       .post("http://localhost:5004/translator", {
         text: props.text,
       })
       .then(({ data }) => setMeaning(data.result))
       .catch((error) => console.log(error.errorMessage));
-  }, []);
+  }, [meaning]);
 
   const handleStoreVocabulary = () => {
     if (meaning !== "") {
@@ -26,6 +30,14 @@ const TranslatePopup = (props) => {
       }
     }
   };
+  const handleSpeak = (text) => {
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    msg.voice = window.speechSynthesis.getVoices()[0];
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(msg);
+  };
+
   return (
     <>
       <div className="pop-up-translate">

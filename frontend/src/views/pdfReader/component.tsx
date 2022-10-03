@@ -14,14 +14,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.state = {
       noteText: "",
       isOpenNote: false,
-      loading: false,
+      loading: true,
       pageX: 0,
       pageY: 0,
     };
   }
 
   async componentDidMount() {
-    const currentBook = await localforage.getItem("currentBook");
     const bookId = window.location.search.split("=").reverse()[0];
     const result = await BookApi("getBook", bookId);
     document.title = result.books[0].name;
@@ -35,13 +34,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   async componentDidUpdate() {
     if (!this.props.bookNotes) {
-      console.log("how many");
       const res = await NoteApi("getBookNotes");
       if (res && res.status === 200) {
         this.props.handleFetchBookNotes(res.data);
-        const noteEl = document.querySelectorAll(".note");
-        console.log(noteEl);
-        noteEl.forEach((el) => el.remove());
         setTimeout(() => {
           this.showPDFHighlight();
         }, 1000);
@@ -49,8 +44,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   }
 
-  showPDFHighlight = () => {
+  showPDFHighlight = async () => {
     let iWin = this.getPDFIframeDoc();
+    let oldNotes = iWin.document.querySelectorAll(".note");
+    await oldNotes.forEach((note: any) => {
+      note.remove();
+    });
     if (!iWin) return;
     if (this.props.bookNotes)
       this.props.bookNotes.list.map((note) => {
@@ -82,7 +81,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 Math.abs(bounds[0] - bounds[2]) +
                 "px; height:" +
                 Math.abs(bounds[1] - bounds[3]) +
-                "px; z-index:0;"
+                "px; z-index:99;"
             );
             el.addEventListener("click", (event: any) => {
               this.handlePDFClick(event);
@@ -110,7 +109,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         (note) => note._id === noteId
       );
       if (!clickedNote) return;
-      console.log(clickedNote);
       this.setState({
         isOpenNote: true,
         noteText: clickedNote.note,
@@ -132,29 +130,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           <Loading />
         ) : (
           <div className="ebook-viewer" id="page-area">
-            {this.state.isOpenNote ? (
+            {this.state.isOpenNote && (
               <div
                 style={{
                   position: "fixed",
                   top: this.state.pageY + "px",
                   left: this.state.pageX + "px",
                   transform: "translate(-125px, -62px)",
+                  background: "green",
+                  width: "250px",
+                  height: "120px",
+                  padding: "14px 4px",
+                  borderRadius: "5px",
+                  backgroundColor: "#3dabab",
                 }}
-                // onMouseLeave={(e) =>
-                //   this.setState({
-                //     isOpenNote: false,
-                //   })
-                // }
+                onMouseLeave={(e) =>
+                  this.setState({
+                    isOpenNote: false,
+                  })
+                }
               >
-                <textarea value={this.state.noteText} />
+                <textarea
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    padding: "1rem 0.5rem",
+                  }}
+                  value={this.state.noteText}
+                />
               </div>
-            ) : (
-              <MenuPopup />
             )}
+            <MenuPopup />
             <MultiButton />
             <iframe
               src={`./lib/pdf/web/viewer.html${window.location.search}`}
-              title="hello"
               width="100%"
               height="100%"
             >

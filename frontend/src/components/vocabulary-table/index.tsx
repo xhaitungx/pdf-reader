@@ -5,6 +5,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TablePagination,
   TableHead,
   TableRow,
   Paper,
@@ -14,7 +15,8 @@ import FlashCardCarousel from "../flash-card-carousel";
 import "./style.css";
 const vocabularyTable = ({ listVocabulary }) => {
   const [open, setOpen] = React.useState(false);
-
+  const [page, setPage] = React.useState(0);
+  const numberOfRow = 2;
   const handleOpenDialog = () => {
     setOpen(true);
   };
@@ -22,6 +24,7 @@ const vocabularyTable = ({ listVocabulary }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <>
       <div className="vocabulary-table-container">
@@ -34,7 +37,7 @@ const vocabularyTable = ({ listVocabulary }) => {
         <TableContainer sx={{ maxHeight: "330px" }} component={Paper}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ position: "relative" }}>
                 <TableCell sx={{ fontWeight: "600" }}>Từ vựng</TableCell>
                 <TableCell sx={{ fontWeight: "600" }} align="right">
                   Ý nghĩa
@@ -42,24 +45,35 @@ const vocabularyTable = ({ listVocabulary }) => {
               </TableRow>
             </TableHead>
             <TableBody className="vocabulary-body" sx={{ width: "100%" }}>
-              {listVocabulary.list.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell component="th" scope="row" sx={{ width: "50%" }}>
-                    {row.text}
-                  </TableCell>
-                  <TableCell align="right" sx={{ width: "50%" }}>
-                    {row.meaning}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {listVocabulary.list
+                .slice(page * numberOfRow, (page + 1) * numberOfRow)
+                .map((row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell component="th" scope="row" sx={{ width: "45%" }}>
+                      {row.text}
+                    </TableCell>
+                    <TableCell align="right" sx={{ width: "45%" }}>
+                      {row.meaning}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          labelRowsPerPage=""
+          component="div"
+          count={listVocabulary.list.length}
+          rowsPerPage={numberOfRow}
+          page={page}
+          onPageChange={(e, page) => setPage(page)}
+          rowsPerPageOptions={[]}
+        />
       </div>
       <Dialog
         sx={{ background: "transparent" }}

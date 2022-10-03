@@ -69,7 +69,6 @@ class BookList extends React.Component<BookListProps, BookListStates> {
     return (
       <>
         <div className="book-list-heading" style={{ color: "white" }}>
-          <Typography variant="h4">BookList</Typography>
           <TextField
             value={this.state.searchInput}
             variant="standard"
@@ -85,9 +84,8 @@ class BookList extends React.Component<BookListProps, BookListStates> {
             }}
           />
         </div>
-        {this.props.books === null ? (
-          <Loading />
-        ) : this.props.books.length > 0 ? (
+        {!this.props.books && <Loading />}
+        {this.props.books && this.props.books.length > 0 && (
           <div className="book-list-container container">
             {this.filterBooks(this.props.books).map((book: Book) => (
               <BookItem
@@ -97,8 +95,9 @@ class BookList extends React.Component<BookListProps, BookListStates> {
               />
             ))}
           </div>
-        ) : (
-          <div>sdsds</div>
+        )}
+        {this.props.books && this.props.books.length === 0 && (
+          <div>Tủ sách trống</div>
         )}
         <SnackBar
           open={this.state.openSnackbar}

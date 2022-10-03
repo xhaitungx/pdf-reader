@@ -1,5 +1,7 @@
+import NoteModel from "../../model/Note";
 export interface NoteListProps {
-  lists: [];
+  notes: NoteModel[];
+  handleFetchNotes: (notes: NoteModel[] | null) => void;
 }
 
 export interface NoteListStates {

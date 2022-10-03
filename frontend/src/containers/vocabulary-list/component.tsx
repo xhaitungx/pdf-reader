@@ -25,7 +25,6 @@ class VocabularyList extends React.Component<
   render() {
     return (
       <>
-        <h1>VocabularyList</h1>
         {this.props.vocabularies ? (
           <div className="vocabulary-list-container container">
             {this.props.vocabularies

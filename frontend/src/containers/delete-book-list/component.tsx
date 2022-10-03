@@ -55,11 +55,9 @@ class DeletedBookList extends React.Component<
     return (
       <>
         <div className="deleted-book-list-heading" style={{ color: "white" }}>
-          <Typography variant="h4">Thùng rác</Typography>
         </div>
-        {this.props.deletedBooks === null ? (
-          <Loading />
-        ) : this.props.deletedBooks.length > 0 ? (
+        {!this.props.deletedBooks && <Loading />}
+        {this.props.deletedBooks && this.props.deletedBooks.length > 0 && (
           <div className="book-list-container container">
             {this.props.deletedBooks.map((book: Book) => (
               <DeletedBookItem
@@ -69,7 +67,8 @@ class DeletedBookList extends React.Component<
               />
             ))}
           </div>
-        ) : (
+        )}
+        {this.props.deletedBooks && this.props.deletedBooks.length === 0 && (
           <div>
             <h1>Hiện tại chưa có sách nào được xóa.</h1>
           </div>
