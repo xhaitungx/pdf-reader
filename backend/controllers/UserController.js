@@ -5,7 +5,7 @@ module.exports = {
     connect();
     const { payload } = req.body;
     console.log(payload);
-    User.create(payload).then((result) => res.status(200).json(result));
+    User.create(payload).then((result) => res.status(200).json({ userId: result._id }));
   },
   Login: function (req, res) {
     connect();

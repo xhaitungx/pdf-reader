@@ -74,12 +74,21 @@ module.exports = {
   },
   hardDelete: function (req, res) {
     connect();
-    const { bookId } = req.body;
+    const { userId, bookId } = req.body;
     Book.findByIdAndDelete(bookId)
-      .then((result) => res.status(200).json(result))
+      .then((result) => User.updateOne({
+        _id: userId
+      },{
+        $pull: {
+          books: {
+            _id: bookId
+          }
+        }}).then((result) => res.status(200).json({
+          message:"Xóa sách thành công"
+        })))
       .catch((err) =>
         res.status(404).json({
-          message: "Xóa sách thành công",
+          message: "Xóa sách thất bại",
         })
       );
   },

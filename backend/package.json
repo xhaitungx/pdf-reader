@@ -17,10 +17,8 @@
     "google-translate-api": "^2.3.0",
     "mongoose": "^6.5.2",
     "nodemon": "^2.0.19",
-    "pdfjs-dist": "^2.16.105",
-    "spark-md5": "^3.0.2",
-    "tratu-core": "^2.2.0"
-  },
+    "pdfjs-dist": "^2.16.105"
+    },
   "author": "Luu Hai Tung",
   "license": "ISC",
   "description": ""
