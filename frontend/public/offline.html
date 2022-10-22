@@ -265,8 +265,8 @@
               author.innerHTML = `- ${randomQuotes.author} -`;
             }
             getRandomQuote();
-            let containerEl = document.getElementById("container");
-            containerEl.addEventListener("click", getRandomQuote);
+            let quoteBox = document.getElementById("quote-box");
+            quoteBox.addEventListener("click", getRandomQuote);
         </script>
     </body>
 </html>

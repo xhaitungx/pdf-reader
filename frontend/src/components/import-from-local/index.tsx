@@ -5,6 +5,8 @@ import { BookApi } from "../../api";
 import { useDispatch } from "react-redux";
 import { handleFetchBooks } from "../../store/actions";
 import { Button } from "@mui/material";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+
 const ImportFromLocal = () => {
   const dispatch = useDispatch();
 
@@ -52,6 +54,7 @@ const ImportFromLocal = () => {
           },
         }}
       >
+        <FileUploadIcon />
         Thêm sách
       </Button>
     </div>

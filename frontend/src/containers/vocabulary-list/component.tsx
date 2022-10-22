@@ -15,27 +15,26 @@ class VocabularyList extends React.Component<
   async componentDidMount() {
     if (!this.props.vocabularies) {
       const result = await VocabulariesApi("getVocabularies");
-      console.log(result.vocabularies);
-      if (result.vocabularies.length > 0) {
-        this.props.handleFetchVocabularies(result.vocabularies);
-      } else console.log("rong");
+      this.props.handleFetchVocabularies(result.vocabularies);
     }
   }
 
   render() {
     return (
       <>
-        {this.props.vocabularies ? (
+      {!this.props.vocabularies &&  <Loading /> }
+        {this.props.vocabularies && this.props.vocabularies.length > 0 && (
           <div className="vocabulary-list-container container">
             {this.props.vocabularies
               .filter((listVocabulary) => listVocabulary.list.length > 0)
               .map((listVocabulary) => (
-                <VocabularyTable listVocabulary={listVocabulary} />
+                <VocabularyTable listVocabulary={listVocabulary} key={listVocabulary._id} />
               ))}
           </div>
-        ) : (
-          <Loading />
-        )}
+        ) }
+        {this.props.vocabularies && this.props.vocabularies.length === 0 && (
+          <h1 className="empty-text">Chưa có từ vựng nào được thêm vào</h1>
+        ) }
       </>
     );
   }

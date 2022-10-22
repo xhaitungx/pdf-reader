@@ -5,7 +5,6 @@ import { reader } from "./reducers/reader";
 import { viewArea } from "./reducers/viewArea";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import BookmarkModel from "../model/Bookmark";
 const rootReducer = combineReducers({
   manager,
   reader,
@@ -30,7 +29,6 @@ export type stateType = {
     isLoading: Boolean;
   };
   reader: {
-    bookmarks: BookmarkModel[];
     notes: NoteModel[];
     digests: NoteModel[];
     color: number;

@@ -1,5 +1,5 @@
 class Vocabulary {
-  id: string;
+  _id: string;
   bookId: string;
   bookName: string;
   list: IVocabulary[];
@@ -9,7 +9,7 @@ class Vocabulary {
     bookName: string,
     list: IVocabulary[]
   ) {
-    this.id = id;
+    this._id = id;
     this.bookId = bookId;
     this.bookName = bookName;
     this.list = list;

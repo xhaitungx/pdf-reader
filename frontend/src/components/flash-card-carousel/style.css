@@ -1,5 +1,6 @@
 .flash-card-carousel-container {
   position: relative;
+  width: 30vw;
 }
 
 .functioning-container {
@@ -16,4 +17,10 @@
   background: white;
   padding: 4px 8px;
   border-radius: 6px;
+}
+
+@media only screen and (max-width: 720px) {
+  .flash-card-carousel-container{
+    width: 70vw;
+  } 
 }

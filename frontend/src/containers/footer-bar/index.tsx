@@ -45,9 +45,8 @@ const FooterBar = () => {
       setValue(newValue);
     }}
     >
-    {FooterBarList.map(item => (
-       
-      <BottomNavigationAction sx={{color:"white"}} label={item.label} icon={item.icon} onClick={(event) => handleListItemClick(event, item.url)} />
+    {FooterBarList.map((item, index) => (
+      <BottomNavigationAction sx={{color:"white"}} key={index} label={item.label} icon={item.icon} onClick={(event) => handleListItemClick(event, item.url)} />
     ))}
     </BottomNavigation>
   );

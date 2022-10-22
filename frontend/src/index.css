@@ -35,3 +35,9 @@ a {
   overflow-y: auto;
   padding-top: 2rem;
 }
+
+.empty-text {
+  text-transform: capitalize;
+  text-align: center;
+  color: var(--blue-darkest);
+}

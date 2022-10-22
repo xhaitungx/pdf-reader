@@ -14,7 +14,7 @@ class BookList extends React.Component<BookListProps, BookListStates> {
     this.state = {
       searchInput: "",
       bookListMenu: false,
-      alertType: "",
+      alertType: "success",
       openSnackbar: false,
     };
     this.handleInput = this.handleInput.bind(this);
@@ -69,35 +69,36 @@ class BookList extends React.Component<BookListProps, BookListStates> {
     return (
       <>
         <div className="book-list-heading" style={{ color: "white" }}>
-          <TextField
-            value={this.state.searchInput}
-            variant="standard"
-            sx={{ padding: "0.5rem 1rem", color: "white" }}
-            onChange={this.handleInput}
-            placeholder="Tìm kiếm sách"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "White" }} />
-                </InputAdornment>
-              ),
-            }}
-          />
         </div>
         {!this.props.books && <Loading />}
         {this.props.books && this.props.books.length > 0 && (
-          <div className="book-list-container container">
-            {this.filterBooks(this.props.books).map((book: Book) => (
-              <BookItem
-                book={book}
-                openSnackBar={this.setAlertType}
-                key={book.id}
-              />
-            ))}
-          </div>
+          <>
+            <TextField
+              value={this.state.searchInput}
+              variant="standard"
+              sx={{ padding: "0.5rem 1rem", color: "white" }}
+              onChange={this.handleInput}
+              placeholder="Tìm kiếm sách"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: "White" }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <div className="book-list-container container">
+              {this.filterBooks(this.props.books).map((book: Book) => (
+                <BookItem
+                  book={book}
+                  openSnackBar={this.setAlertType}
+                  key={book._id}
+                />
+              ))}
+            </div></>
         )}
         {this.props.books && this.props.books.length === 0 && (
-          <div>Tủ sách trống</div>
+          <h1 className="empty-text">Tủ sách trống</h1>
         )}
         <SnackBar
           open={this.state.openSnackbar}

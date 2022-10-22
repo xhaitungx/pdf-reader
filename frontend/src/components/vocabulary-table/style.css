@@ -16,6 +16,12 @@
     text-overflow: ellipsis;
 }
 
-.vocabulary-body{
-    overflow-y: auto;
+.MuiTablePagination-displayedRows{
+  display: none !important; 
+}
+
+@media only screen and (max-width: 720px) {
+  .vocabulary-table-container{
+    width: 90%;
+  } 
 }

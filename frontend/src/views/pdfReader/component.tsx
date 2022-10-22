@@ -13,11 +13,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     super(props);
     this.state = {
       noteText: "",
+      isValidBook: false,
       isOpenNote: false,
       loading: true,
       pageX: 0,
       pageY: 0,
     };
+  }
+
+  setStopLoading = () => {
+    this.setState({
+      loading: false
+    });
   }
 
   async componentDidMount() {
@@ -28,18 +35,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Content: result.books[0].content.data,
       md5: result.books[0].md5,
     });
+    this.props.handleFetchBookNotes(null);
     this.setState({
-      loading: false,
-    });
+      isValidBook: true
+    })
   }
+
   async componentDidUpdate() {
-    if (!this.props.bookNotes) {
+    if (!this.props.bookNotes && !this.state.loading) {
       const res = await NoteApi("getBookNotes");
       if (res && res.status === 200) {
         this.props.handleFetchBookNotes(res.data);
         setTimeout(() => {
           this.showPDFHighlight();
-        }, 1000);
+        }, 3000)
       }
     }
   }
@@ -68,20 +77,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             el.setAttribute(
               "style",
               "position: absolute;" +
-                "cursor: pointer;" +
-                "opacity: 0.2;" +
-                "background-color:" +
-                note.color +
-                "; left:" +
-                Math.min(bounds[0], bounds[2]) +
-                "px; top:" +
-                Math.min(bounds[1], bounds[3]) +
-                "px;" +
-                "width:" +
-                Math.abs(bounds[0] - bounds[2]) +
-                "px; height:" +
-                Math.abs(bounds[1] - bounds[3]) +
-                "px; z-index:99;"
+              "cursor: pointer;" +
+              "opacity: 0.2;" +
+              "background-color:" +
+              note.color +
+              "; left:" +
+              Math.min(bounds[0], bounds[2]) +
+              "px; top:" +
+              Math.min(bounds[1], bounds[3]) +
+              "px;" +
+              "width:" +
+              Math.abs(bounds[0] - bounds[2]) +
+              "px; height:" +
+              Math.abs(bounds[1] - bounds[3]) +
+              "px; z-index:99;"
             );
             el.addEventListener("click", (event: any) => {
               this.handlePDFClick(event);
@@ -116,62 +125,56 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         pageY: e.clientY,
       });
     }
-    // this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
-    //   this.showMenu();
-    //   this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
-    //   event.stopPropagation();
-    // });
   };
 
   render() {
     return (
       <>
-        {this.state.loading ? (
-          <Loading />
-        ) : (
-          <div className="ebook-viewer" id="page-area">
-            {this.state.isOpenNote && (
-              <div
-                style={{
-                  position: "fixed",
-                  top: this.state.pageY + "px",
-                  left: this.state.pageX + "px",
-                  transform: "translate(-125px, -62px)",
-                  background: "green",
-                  width: "250px",
-                  height: "120px",
-                  padding: "14px 4px",
-                  borderRadius: "5px",
-                  backgroundColor: "#3dabab",
-                }}
-                onMouseLeave={(e) =>
-                  this.setState({
-                    isOpenNote: false,
-                  })
-                }
-              >
-                <textarea
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    padding: "1rem 0.5rem",
-                  }}
-                  value={this.state.noteText}
-                />
-              </div>
-            )}
-            <MenuPopup />
-            <MultiButton />
-            <iframe
-              src={`./lib/pdf/web/viewer.html${window.location.search}`}
-              width="100%"
-              height="100%"
+        {this.state.loading &&
+          <Loading />}
+
+        {this.state.isValidBook && <div className="ebook-viewer" id="page-area">
+          {this.state.isOpenNote && (
+            <div
+              style={{
+                position: "fixed",
+                top: this.state.pageY + "px",
+                left: this.state.pageX + "px",
+                transform: "translate(-125px, -62px)",
+                background: "green",
+                width: "250px",
+                height: "120px",
+                padding: "14px 4px",
+                borderRadius: "5px",
+                backgroundColor: "#3dabab",
+              }}
+              onMouseLeave={(e) =>
+                this.setState({
+                  isOpenNote: false,
+                })
+              }
             >
-              Loading
-            </iframe>
-            {/* <Toaster /> */}
-          </div>
-        )}
+              <textarea
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  padding: "1rem 0.5rem",
+                }}
+                value={this.state.noteText}
+              />
+            </div>
+          )}
+          <MenuPopup />
+          <MultiButton />
+          <iframe
+            src={`./lib/pdf/web/viewer.html${window.location.search}`}
+            width="100%"
+            height="100%"
+            onLoad={this.setStopLoading}
+          >
+            Loading
+          </iframe>
+        </div>}
       </>
     );
   }

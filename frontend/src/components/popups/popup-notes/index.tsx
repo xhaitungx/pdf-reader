@@ -107,7 +107,7 @@ const NotePopup = (props) => {
     };
     const res = await NoteApi("addNote", { notes });
     if (res && res.status === 200) {
-      console.log("add");
+      props.closeMenu();
       dispatch(handleFetchBookNotes(null));
     }
   };

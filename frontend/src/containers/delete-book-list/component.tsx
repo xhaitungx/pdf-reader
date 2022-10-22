@@ -14,7 +14,7 @@ class DeletedBookList extends React.Component<
   constructor(props: DeletedBookListProps) {
     super(props);
     this.state = {
-      alertType: "",
+      alertType: "success",
       openSnackbar: false,
     };
     this.setAlertType = this.setAlertType.bind(this);
@@ -63,14 +63,14 @@ class DeletedBookList extends React.Component<
               <DeletedBookItem
                 book={book}
                 openSnackBar={this.setAlertType}
-                key={book.id}
+                key={book._id}
               />
             ))}
           </div>
         )}
         {this.props.deletedBooks && this.props.deletedBooks.length === 0 && (
           <div>
-            <h1>Hiện tại chưa có sách nào được xóa.</h1>
+            <h1 className="empty-text">Chưa có sách nào được xóa</h1>
           </div>
         )}
         <SnackBar

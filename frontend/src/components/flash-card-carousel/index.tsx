@@ -20,7 +20,7 @@ const FlashCardCarousel = ({ vocabularyList }) => {
     window.speechSynthesis.speak(msg);
   };
   return (
-    <div className="flash-card-carousel-container" style={{ width: "30vw" }}>
+    <div className="flash-card-carousel-container">
       <div className="functioning-container">
         <div className="card-number-status">
           <AutoAwesomeMotion />
@@ -40,12 +40,10 @@ const FlashCardCarousel = ({ vocabularyList }) => {
             setCurrentCard(next + 1);
             handleSpeak(next);
           }
-          console.log(next);
         }}
         prev={(prev, active) => {
           if (prev !== undefined) setCurrentCard(prev + 1);
           handleSpeak(prev);
-          console.log(prev);
         }}
         sx={{ background: "transparent" }}
         animation="slide"

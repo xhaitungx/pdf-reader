@@ -1,15 +1,15 @@
 class Note {
-  id: string;
+  _id: string;
   bookId: string;
   bookName: string;
   list: INote[];
   constructor(
-    id: string,
+    _id: string,
     bookId: string,
     bookName: string,
     list: INote[]
   ) {
-    this.id = id;
+    this._id = _id;
     this.bookId = bookId;
     this.bookName = bookName;
     this.list = list;

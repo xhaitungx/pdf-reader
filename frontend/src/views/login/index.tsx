@@ -53,25 +53,32 @@ const Login = () => {
   };
 
   const submitLogin = async (e) => {
-    // setIsSubmit(true);
+    setIsSubmit(true);
     if (!formValidation()) return;
-    const result = await UserApi("login", {
+    const res = await UserApi("login", {
       email: form.email,
       password: form.password,
     });
-    window.localStorage.setItem("userId", result.userId);
-    window.location.href = "/management";
-    // setIsSubmit(false);
+    if(res && res.status === 200){
+      window.localStorage.setItem("userId", res.data.userId);
+      window.location.href = "/management";
+
+    }
+    setIsSubmit(false);
   };
 
   const submitRegister = async (e) => {
-    // setIsSubmit(true);
+    setIsSubmit(true);
     if (!formValidation()) return;
-    const result = await UserApi("register", {
+    const res = await UserApi("register", {
       email: form.email,
       password: form.password,
     });
-    window.localStorage.setItem("userId", result.userId);
+    if(res && res.status === 200){
+      window.localStorage.setItem("userId", res.data.userId);
+      window.location.href = "/management";
+    }
+    setIsSubmit(false);
   };
 
   return (

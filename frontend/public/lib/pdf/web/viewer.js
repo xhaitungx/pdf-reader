@@ -3146,15 +3146,15 @@
       {
         webViewerOpenFileViaURL = async function (file) {
           const currentBook = await localforage.getItem("currentBook");
-          const cfi = await localforage.getItem("testCfi");
-            if(cfi !== null){
+          const cfi = localStorage.getItem("cfi");
+          let json = localStorage.getItem("pdfjs.history");
+          console.log(cfi);
+            if(cfi !== null && json){
               console.log("cfi note is working");
-              console.log(console.log(cfi));
-              let json = localStorage.getItem("pdfjs.history");
               let libHistory = JSON.parse(json || "{}");
               console.log(libHistory);
-              libHistory.files[libHistory.files.findIndex(item => item.fingerprint === currentBook.md5)] = cfi;
-              console.log(libHistory);
+              libHistory.files[libHistory.files.findIndex(item => item.fingerprint === currentBook.md5)] = JSON.parse(cfi);
+              localStorage.removeItem("cfi");
               localStorage.setItem("pdfjs.history", JSON.stringify(libHistory));
             }
 

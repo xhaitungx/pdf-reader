@@ -1,4 +1,3 @@
-// import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 export interface ViewerProps {
   bookNotes: NoteModel | null;
@@ -7,6 +6,7 @@ export interface ViewerProps {
 export interface ViewerState {
   noteText: string;
   isOpenNote: boolean;
+  isValidBook: boolean;
   loading: boolean;
   pageX: number;
   pageY: number;

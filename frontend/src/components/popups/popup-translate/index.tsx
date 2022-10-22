@@ -7,7 +7,6 @@ import "./style.css";
 const TranslatePopup = (props) => {
   const [meaning, setMeaning] = useState(null);
   useEffect(() => {
-    console.log(meaning);
     if (meaning !== null) {
       handleSpeak(props.text);
     }

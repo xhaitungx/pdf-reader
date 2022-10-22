@@ -1,8 +1,9 @@
 import React from "react";
 import { HeaderProps, HeaderStates } from "./interface";
 import ImportFromLocal from "../../components/import-from-local";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import "./style.css";
+import localforage from "localforage";
 class Header extends React.Component<HeaderProps, HeaderStates> {
   render() {
     return (
@@ -22,7 +23,14 @@ class Header extends React.Component<HeaderProps, HeaderStates> {
             <Typography variant="h6" noWrap component="div">
               PDF Reader
             </Typography>
+            <div style={{display:"flex", gap:"4px"}}>
             <ImportFromLocal />
+            <Button sx={{color:"white"}} onClick={(e) =>{
+              localStorage.clear();
+              localforage.clear();
+              window.location.href = "/login";
+            }}>Đăng xuất</Button>
+            </div>
           </Toolbar>
         </AppBar>
       </>

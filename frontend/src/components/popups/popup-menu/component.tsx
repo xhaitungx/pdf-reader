@@ -19,7 +19,6 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
   }
 
   componentDidMount() {
-    // this.openMenu();
     const viewer = document.querySelector(".ebook-viewer");
     if (viewer) viewer.setAttribute("style", "height:100vh;overflow-y:hidden");
     let pageArea = document.getElementById("page-area");
@@ -29,12 +28,8 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
     iframe.onload = () => {
       let doc: any;
       if (iframe.contentWindow !== null) doc = iframe.contentWindow;
-
-      // this.setState({ loading: false });
-      // pdfMouseEvent();
       doc.document.addEventListener("click", (event: any) => {
         event.preventDefault();
-        // handleLinkJump(event);
       });
       doc.document.addEventListener("mouseup", (e) => {
         if (this.props.readMode === 0) return;
@@ -55,19 +50,8 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
             pageX: e.pageX,
             pageY: e.pageY,
           });
-        // iWin.getSelection() && showHighlight(getHightlightCoords());
       });
     };
-    // if (nextProps.rect !== this.props.rect) {
-    //   this.setState(
-    //     {
-    //       rect: nextProps.rect,
-    //     },
-    //     () => {
-    //       this.openMenu();
-    //     }
-    //   );
-    // }
   }
 
   openMenu = () => {
@@ -78,27 +62,6 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
     let doc = iframe.contentDocument;
     if (!doc) return;
     let sel = doc.getSelection();
-    console.log(doc);
-    console.log(sel);
-
-    // console.log(sel?.toString());
-    // this.props.handleChangeDirection(false);
-    // // 如果 popmenu正在被展示，则隐藏
-    // if (this.props.isOpenMenu) {
-    //   this.props.handleMenuMode("menu");
-    //   this.props.handleOpenMenu(false);
-    //   this.props.handleNoteKey("");
-    // }
-    // if (!sel) return;
-    // // 使弹出菜单更加灵活可控;
-    // if (sel.isCollapsed) {
-    //   this.props.isOpenMenu && this.props.handleOpenMenu(false);
-    //   this.props.handleMenuMode("menu");
-    //   this.props.handleNoteKey("");
-    //   return;
-    // }
-    // this.showMenu();
-    // this.props.handleMenuMode("menu");
   };
 
   closePopupMenu = () => {
