@@ -61,7 +61,7 @@ class NoteList extends React.Component<NoteListProps, NoteListStates> {
       <>
         {!this.props.notes && <Loading />}
         {this.props.notes && this.props.notes.length > 0 && (
-          <div className="container">
+          <div className="container note-list-container">
             {this.props.notes
               .filter((noteList) => noteList.list.length > 0)
               .map((noteList) => this.renderNoteBookNoteToggle(noteList))}

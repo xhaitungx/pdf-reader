@@ -1,86 +1,66 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { handleChangeReadMode } from "../../store/actions";
 import { stateType } from "../../store";
 import { Box, Fab, Tooltip } from "@mui/material";
 import { Translate, Notes, Visibility, Cancel } from "@mui/icons-material";
 import "./style.css";
 const MultiButton = () => {
-  const [isHover, setIsHover] = useState(false);
-  const readMode = useSelector((state: stateType) => state.viewArea.readMode);
+  const [isOpen, setIsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState(0);
   const dispatch = useDispatch();
+
+  const Buttons = [
+    {
+      title: "Mặc định",
+      element: <Visibility />,
+      background: "white",
+      readMode: 0
+    },
+    {
+      title: "Dịch nghĩa",
+      element: <Translate />,
+      background: "#d8f2ff",
+      readMode: 1
+    },
+    {
+      title: "Ghi chú",
+      element: <Notes />,
+      background: "#00cbfe",
+      readMode: 2
+    }
+  ]
 
   const onChangeReadMode = (readModeNumber) => {
     dispatch(handleChangeReadMode(readModeNumber));
-    setIsHover(false);
+    setViewMode(readModeNumber);
+    setIsOpen(false);
   };
 
-  const onHover = (e) => {
-    setIsHover(true);
-  };
-
-  const ButtonWithTooltip = ({ title, element, background, readMode }) => (
-    <Tooltip title={title} placement="left" disableInteractive>
+  const ButtonWithTooltip = (button) => (
+    <Tooltip title={button.title} placement="left" disableInteractive>
       <Fab
-        onMouseEnter={onHover}
-        onClick={(e) => onChangeReadMode(readMode)}
-        sx={{ mb: 1, background: background }}
+        onClick={(e) => {
+          setIsOpen(true);
+          if (button.readMode !== viewMode) onChangeReadMode(button.readMode)
+        }
+        }
+        sx={{ mb: 1, background: button.background }}
       >
-        {element}
+        {button.element}
       </Fab>
     </Tooltip>
   );
 
   return (
-    <div className="multi-button" onMouseLeave={(e) => setIsHover(false)}>
-      {isHover && (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <ButtonWithTooltip
-            title="Ghi chú"
-            element={<Notes />}
-            readMode={2}
-            background="#00cbfe"
-          />
-          <ButtonWithTooltip
-            title="Dịch nghĩa"
-            element={<Translate />}
-            readMode={1}
-            background="#d8f2ff"
-          />
-        </Box>
-      )}
-      {!isHover && readMode === 0 && (
-        <ButtonWithTooltip
-          title="Mặc định"
-          element={<Visibility />}
-          readMode={0}
-          background="white"
-        />
-      )}
-      {!isHover && readMode === 1 && (
-        <ButtonWithTooltip
-          title="Mặc định"
-          element={<Translate />}
-          readMode={0}
-          background="white"
-        />
-      )}
-      {!isHover && readMode === 2 && (
-        <ButtonWithTooltip
-          title="Mặc định"
-          element={<Notes />}
-          readMode={0}
-          background="white"
-        />
-      )}
-      {isHover && readMode !== 0 && (
-        <ButtonWithTooltip
-          title="Mặc định"
-          element={<Cancel />}
-          readMode={0}
-          background="white"
-        />
-      )}
+    <div className="multi-button" onMouseLeave={(e) => setIsOpen(false)}>
+      {isOpen && <div className="selective-button">
+        {Buttons.filter((item, index) => item.readMode !== viewMode)
+          .map(button => ButtonWithTooltip(Buttons[button.readMode]))}
+      </div>}
+      <div className="active-button">
+        {ButtonWithTooltip(Buttons[viewMode])}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 .book-item{
   position: relative;
+  padding-bottom: 1rem;
 }
 .book-item, .book-cover {
   width: 120px;

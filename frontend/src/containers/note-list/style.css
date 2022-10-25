@@ -8,12 +8,20 @@
 
 .book-note-label {
     color: white;
+    width: 60vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .book-note-list {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+.note-list-container{
+    padding-right: 1rem;
 }
 
 .note {

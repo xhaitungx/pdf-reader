@@ -46,6 +46,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       const res = await NoteApi("getBookNotes");
       if (res && res.status === 200) {
         this.props.handleFetchBookNotes(res.data);
+        if(res.data.list.length >= 1)
         setTimeout(() => {
           this.showPDFHighlight();
         }, 3000)

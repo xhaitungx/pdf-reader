@@ -5,7 +5,6 @@ import DeletedBookItem from "../../components/deleted-book-item";
 import Loading from "../../components/loading";
 import { DeletedBookListProps, DeletedBookListStates } from "./interface";
 import SnackBar from "../../components/snack-bar";
-import { Typography } from "@mui/material";
 import "./style.css";
 class DeletedBookList extends React.Component<
   DeletedBookListProps,
