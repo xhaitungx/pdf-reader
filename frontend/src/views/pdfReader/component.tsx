@@ -1,7 +1,6 @@
 import React from "react";
 import MultiButton from "../../components/multi-button";
 import MenuPopup from "../../components/popups/popup-menu";
-import NotePopup from "../../components/popups/popup-notes";
 import Loading from "../../components/loading";
 import { ViewerProps, ViewerState } from "./interface";
 import { BookApi, NoteApi } from "../../api";

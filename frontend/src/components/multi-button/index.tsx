@@ -41,6 +41,8 @@ const MultiButton = () => {
     <Tooltip title={button.title} placement="left" disableInteractive>
       <Fab
         onClick={(e) => {
+          const viewer = document.querySelector(".ebook-viewer");
+          if(viewer) viewer.addEventListener('touchend',() => console.log("ok"));
           setIsOpen(true);
           if (button.readMode !== viewMode) onChangeReadMode(button.readMode)
         }

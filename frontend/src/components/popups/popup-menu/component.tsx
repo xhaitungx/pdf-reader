@@ -20,7 +20,8 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
 
   componentDidMount() {
     const viewer = document.querySelector(".ebook-viewer");
-    if (viewer) viewer.setAttribute("style", "height:100vh;overflow-y:hidden");
+    if (viewer) { viewer.setAttribute("style", "height:100vh;overflow-y:hidden"); }
+
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
@@ -51,6 +52,27 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
             pageY: e.pageY,
           });
       });
+
+      doc.document.addEventListener("touchend", (e) => {
+        if (this.props.readMode === 0) return;
+        if (!doc!.getSelection()) return;
+        var noteRect = doc!
+          .getSelection()!
+          .getRangeAt(0)
+          .getBoundingClientRect();
+        var text = doc!.getSelection().toString();
+        if (text === "") this.setState({ isOpenMenu: false });
+        else
+          this.setState({
+            isOpenMenu: true,
+            text,
+            noteRect,
+            pageWidth: doc.document.body.scrollWidth,
+            pageHeight: doc.document.body.scrollHeight,
+            pageX: e.changedTouches[0].pageX,
+            pageY: e.changedTouches[0].pageY,
+          });
+      });
     };
   }
 
@@ -69,6 +91,14 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
       isOpenMenu: false,
       text: "",
     });
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    let sel: any = doc.getSelection();
+    if(sel) sel.removeAllRanges();
   };
 
   render() {
