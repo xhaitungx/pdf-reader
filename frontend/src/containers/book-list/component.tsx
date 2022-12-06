@@ -38,7 +38,7 @@ class BookList extends React.Component<BookListProps, BookListStates> {
   async componentDidMount() {
     if (!this.props.books) {
       const res = await BookApi("getBooksList");
-      if (res.status === 200) {
+      if (res && res.status === 200) {
         this.props.handleFetchBooks(res.data.books);
       }
     }
@@ -47,7 +47,7 @@ class BookList extends React.Component<BookListProps, BookListStates> {
   async componentDidUpdate() {
     if (!this.props.books) {
       const res = await BookApi("getBooksList");
-      if (res.status === 200) {
+      if (res && res.status === 200) {
         this.props.handleFetchBooks(res.data.books);
       }
     }

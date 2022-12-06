@@ -36,7 +36,7 @@ const BookItem = ({ book, openSnackBar }) => {
 
   const handleDeleteBook = async (e) => {
     const res = await BookApi("softDeleteBook", book._id);
-    if (res.status === 200) {
+    if (res && res.status === 200) {
       dispatch(handleFetchBooks(null));
       dispatch(handleFetchDeletedBooks(null));
       openSnackBar("success");

@@ -15,24 +15,35 @@ const Login = () => {
   const [validator, setValidator] = useState({
     emailError: false,
     rePasswordError: false,
+    loginError: false
   });
 
   const clearValidation = () => {
     setValidator({
       emailError: false,
       rePasswordError: false,
+      loginError: false
     });
   };
-  const formValidation = () => {
+  const formValidation = async (type: string) => {
     const emailValidate =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         form.email
       );
     const rePasswordValidate = form.password === form.rePassword;
-    if (emailValidate === false || rePasswordValidate === false) {
+    if (type === 'login' && emailValidate === false) {
+      setValidator({
+        emailError: !emailValidate,
+        rePasswordError: false,
+        loginError: false
+      });
+      return false;
+    }
+    if (type === 'register' && (emailValidate === false || rePasswordValidate === false)) {
       setValidator({
         emailError: !emailValidate,
         rePasswordError: !rePasswordValidate,
+        loginError: false
       });
       return false;
     }
@@ -54,31 +65,51 @@ const Login = () => {
 
   const submitLogin = async (e) => {
     setIsSubmit(true);
-    if (!formValidation()) return;
+    let validator = await formValidation("login");
+    if (!validator) {
+      setIsSubmit(false);
+      return;
+    }
     const res = await UserApi("login", {
       email: form.email,
       password: form.password,
     });
-    if(res && res.status === 200){
-      window.localStorage.setItem("userId", res.data.userId);
-      window.location.href = "/management";
 
+    if (res && res.status === 200) {
+      if (res.data.userId) {
+        setValidator({
+          emailError: false,
+          rePasswordError: false,
+          loginError: false
+        });
+        window.localStorage.setItem("userId", res.data.userId);
+        window.location.href = "/management";
+      }
+
+      else setValidator({
+        emailError: false,
+        rePasswordError: false,
+        loginError: true
+      });
     }
     setIsSubmit(false);
   };
 
   const submitRegister = async (e) => {
     setIsSubmit(true);
-    if (!formValidation()) return;
+    let validator = await formValidation("register");
+    if (!validator) {
+      setIsSubmit(false);
+      return;
+    }
     const res = await UserApi("register", {
       email: form.email,
       password: form.password,
     });
-    if(res && res.status === 200){
+    if (res && res.status === 200) {
       window.localStorage.setItem("userId", res.data.userId);
       window.location.href = "/management";
     }
-    setIsSubmit(false);
   };
 
   return (
@@ -133,6 +164,7 @@ const Login = () => {
                 </LoadingButton>
               ) : (
                 <>
+                  {validator.loginError && <small>Email hoặc mật khẩu không hợp lệ</small>}
                   <Button
                     onClick={submitLogin}
                     sx={{ marginTop: "12px" }}
@@ -152,7 +184,7 @@ const Login = () => {
                   onChange={handleInputRePassword}
                   value={form.rePassword}
                   type="password"
-                  label="Mật khẩu"
+                  label="Nhập lại mật khẩu"
                   variant="standard"
                 />
                 {validator.rePasswordError && (

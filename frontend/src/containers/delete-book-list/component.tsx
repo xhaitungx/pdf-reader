@@ -36,7 +36,7 @@ class DeletedBookList extends React.Component<
   async componentDidMount() {
     if (!this.props.deletedBooks) {
       const res = await BookApi("getDeletedBooksList");
-      if (res.status === 200)
+      if (res && res.status === 200)
         this.props.handleFetchDeletedBooks(res.data.books);
     }
   }

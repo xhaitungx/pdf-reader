@@ -10,8 +10,10 @@ module.exports = {
   Login: function (req, res) {
     connect();
     const { payload } = req.body;
-    User.findOne(payload).then((result) =>
-      res.status(200).json({ userId: result._id })
-    );
+    User.findOne({
+      email: req.body.email,
+      password: req.body.password
+    }).then((result) => res.status(200).json({ userId: result?._id })
+    )
   },
 };

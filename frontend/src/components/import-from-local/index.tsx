@@ -34,14 +34,14 @@ const ImportFromLocal = () => {
       .then((res) => res);
     if (result.status === 200) {
       const books = result.data;
-      if (books.fail.length > 0) {
+      if (books.fail && books.fail.length > 0) {
         setSnackBar({
           openSnackbar: true,
           alertType: "warning",
           message: books.fail.join(", ") + " đã tồn tại"
         })
       }
-      if (books.success.length > 0) {
+      if (books.success && books.success.length > 0) {
         setSnackBar({
           openSnackbar: true,
           alertType: "success",

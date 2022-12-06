@@ -21,7 +21,7 @@ const DeletedBookItem = ({ book, openSnackBar }) => {
 
   const handleUndoBook = async (e) => {
     const res = await BookApi("restoreBook", book._id);
-    if (res.status === 200) {
+    if (res && res.status === 200) {
       dispatch(handleFetchBooks(null));
       dispatch(handleFetchDeletedBooks(null));
       openSnackBar("success");
@@ -30,7 +30,7 @@ const DeletedBookItem = ({ book, openSnackBar }) => {
 
   const handleHardDeleteBook = async (e) => {
     const res = await BookApi("hardDeleteBook", book._id);
-    if (res.status === 200) {
+    if (res && res.status === 200) {
       dispatch(handleFetchBooks(null));
       dispatch(handleFetchDeletedBooks(null));
     }

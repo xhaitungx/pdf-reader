@@ -20,8 +20,7 @@ class MenuPopup extends React.Component<MenuPopupProps, MenuPopupStates> {
 
   componentDidMount() {
     const viewer = document.querySelector(".ebook-viewer");
-    if (viewer) { viewer.setAttribute("style", "height:100vh;overflow-y:hidden"); }
-
+    if (viewer) viewer.setAttribute("style", "height:100vh;overflow-y:hidden");
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];

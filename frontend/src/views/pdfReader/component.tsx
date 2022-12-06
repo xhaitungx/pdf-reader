@@ -1,6 +1,7 @@
 import React from "react";
 import MultiButton from "../../components/multi-button";
 import MenuPopup from "../../components/popups/popup-menu";
+import NotePopup from "../../components/popups/popup-notes";
 import Loading from "../../components/loading";
 import { ViewerProps, ViewerState } from "./interface";
 import { BookApi, NoteApi } from "../../api";
@@ -45,7 +46,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       const res = await NoteApi("getBookNotes");
       if (res && res.status === 200) {
         this.props.handleFetchBookNotes(res.data);
-        if(res.data.list.length >= 1)
+        if(res.data.list && res.data.list.length >= 1)
         setTimeout(() => {
           this.showPDFHighlight();
         }, 3000)
